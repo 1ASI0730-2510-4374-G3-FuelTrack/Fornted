@@ -1,0 +1,24 @@
+:root {
+    --primary-color: #219653;
+    --accent-color: #F2C94C;
+    --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --font-color: #333;
+    --bg-color: #f7f8fc;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-main);
+    background-color: var(--bg-color);
+    color: var(--font-color);
+}
+
+a {
+    text-decoration: none;
+    color: var(--primary-color);
+}
+
+button {
+    cursor: pointer;
+    border: none;
+}

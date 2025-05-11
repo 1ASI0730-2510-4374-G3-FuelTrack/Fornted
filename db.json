@@ -1,0 +1,39 @@
+{
+  "clients": [
+    {
+      "id": 1,
+      "email": "cliente@empresa.com",
+      "password": "123456",
+      "name": "Empresa Solicitante SAC"
+    }
+  ],
+  "suppliers": [
+    {
+      "id": 1,
+      "ruc": "20123456789",
+      "email": "proveedor@fuel.com",
+      "password": "admin123",
+      "name": "Distribuciones Fuel S.A."
+    }
+  ],
+  "orders": [
+    {
+      "id": 1,
+      "created": "4 APR, 2025",
+      "user": "Sebastián Rosas",
+      "amount": "S/ 4000.00",
+      "terminal": "Callao",
+      "orderId": "d_01hn1gnzakrzopn18z45",
+      "status": "Requested",
+      "products": [
+        {
+          "product": "Diesel B5",
+          "quantity": 500,
+          "unit": "gal",
+          "price": "S/ 8.00",
+          "total": "S/ 4000.00"
+        }
+      ]
+    }
+  ]
+}
