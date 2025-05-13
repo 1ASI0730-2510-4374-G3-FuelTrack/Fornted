@@ -18,6 +18,7 @@ import WorkflowsDashboard from '@/domains/client/workflows/views/WorkflowsDashbo
 
 // Vistas organizadas (Supplier)
 import OrdersManagement from '@/domains/supplier/orders-management/views/OrdersManagement.vue'
+import ConciliationsDashboard from '@/domains/supplier/conciliations/views/ConciliationsDashboard.vue'
 
 const routes = [
     // ✅ Página de bienvenida
@@ -48,7 +49,7 @@ const routes = [
         children: [
             { path: 'admin', component: { template: '<h2>Admin View</h2>' } },
             { path: 'orders', component: OrdersManagement },
-            { path: 'conciliations', component: { template: '<h2>Admin View</h2>' } },
+            { path: 'conciliations', component: ConciliationsDashboard },
             { path: 'dispatch', component: { template: '<h2>Admin View</h2>' } },
             { path: 'analytics', component: { template: '<h2>Admin View</h2>' } },
             { path: 'prices', component: { template: '<h2>Admin View</h2>' } },
