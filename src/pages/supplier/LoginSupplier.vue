@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { loginSupplier } from '@/services/authService'
+import { loginSupplier } from '@/services/authService.js'
 
 export default {
   name: 'LoginSupplier',

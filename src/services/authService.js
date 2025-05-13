@@ -1,8 +1,16 @@
+// src/domains/shared/services/authService.js
+
 import axios from 'axios'
 
 const API_URL = 'http://localhost:3001'
 
-export async function loginClient(email: string, password: string) {
+/**
+ * Login para clientes
+ * @param {string} email
+ * @param {string} password
+ * @returns {Promise<{ success: boolean, user?: object, message?: string }>}
+ */
+export async function loginClient(email, password) {
     try {
         const response = await axios.get(`${API_URL}/clients`, {
             params: { email, password }
@@ -19,7 +27,14 @@ export async function loginClient(email: string, password: string) {
     }
 }
 
-export async function loginSupplier(ruc: string, email: string, password: string) {
+/**
+ * Login para proveedores
+ * @param {string} ruc
+ * @param {string} email
+ * @param {string} password
+ * @returns {Promise<{ success: boolean, user?: object, message?: string }>}
+ */
+export async function loginSupplier(ruc, email, password) {
     try {
         const response = await axios.get(`${API_URL}/suppliers`, {
             params: { ruc, email, password }
