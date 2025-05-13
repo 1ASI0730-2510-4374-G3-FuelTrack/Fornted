@@ -16,7 +16,7 @@
       </form>
 
       <p class="register-text">
-        Not a Client? <a href="#" class="register-link">Click Here</a>
+        Not a Client? <a href="/login-supplier" class="register-link">Click Here</a>
       </p>
     </div>
   </div>

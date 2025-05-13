@@ -19,7 +19,7 @@
       </form>
 
       <p class="register-text">
-        Not a Supplier? <a href="#" class="register-link">Click Here</a>
+        Not a Supplier? <a href="/login-client" class="register-link">Click Here</a>
       </p>
     </div>
   </div>
@@ -54,4 +54,4 @@ export default {
 }
 </script>
 
-<style scoped src="../../assets/styles/pages/loginClient.css"></style>
+<style scoped src="../../assets/styles/pages/loginSupplier.css"></style>
