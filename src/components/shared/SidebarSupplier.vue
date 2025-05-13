@@ -1,5 +1,5 @@
 <template>
-  <aside class="sidebar">
+  <aside class="sidebar-supplier">
     <div class="logo-block">
       <img src="/img/logo.png" alt="FuelTrack Logo" class="sidebar-logo" />
       <h3 class="sidebar-title">FuelTrack</h3>
@@ -12,7 +12,8 @@
       <li><router-link to="/supplier/dispatch" class="sidebar-link" active-class="active"><i class="ph ph-truck"></i> Dispatch</router-link></li>
       <li><router-link to="/supplier/analytics" class="sidebar-link" active-class="active"><i class="ph ph-chart-bar"></i> Analytics</router-link></li>
       <li><router-link to="/supplier/prices" class="sidebar-link" active-class="active"><i class="ph ph-currency-dollar"></i> Prices</router-link></li>
-      <li><router-link to="/supplier/clients" class="sidebar-link" active-class="active"><i class="ph ph-headphones"></i> Clients</router-link></li></ul>
+      <li><router-link to="/supplier/clients" class="sidebar-link" active-class="active"><i class="ph ph-headphones"></i> Clients</router-link></li>
+    </ul>
   </aside>
 </template>
 
@@ -21,19 +22,18 @@ export default {
   name: 'SidebarSupplier'
 }
 </script>
+
 <style scoped>
-.sidebar {
+.sidebar-supplier {
   background-color: #0A2C47;
   color: #ffffff;
-  width: 250px;
+  width: 240px;
   min-height: 100vh;
   padding: 2rem 1rem;
   display: flex;
   flex-direction: column;
   box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1);
-  position: fixed;
-  top: 0;
-  left: 0;
+  /* position: fixed;  <-- Eliminado */
 }
 
 .logo-block {

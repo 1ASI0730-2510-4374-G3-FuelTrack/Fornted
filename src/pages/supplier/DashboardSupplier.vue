@@ -25,9 +25,17 @@ export default {
   background-color: #0A2C47;
 }
 
+/* Asegúrate que Sidebar tenga ancho fijo */
+.sidebar-supplier {
+  width: 240px;
+  flex-shrink: 0;
+}
+
+/* Contenido principal ocupa el resto */
 .main-content {
   flex: 1;
   padding: 2rem;
   overflow-y: auto;
+  background-color: #0C1F3A;
 }
 </style>

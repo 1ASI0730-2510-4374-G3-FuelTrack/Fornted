@@ -16,6 +16,9 @@ import TerminalsDashboard from '@/domains/client/terminals/views/TerminalsDashbo
 import ProviderDashboard from '@/domains/client/provider/views/ProviderDashboard.vue'
 import WorkflowsDashboard from '@/domains/client/workflows/views/WorkflowsDashboard.vue'
 
+// Vistas organizadas (Supplier)
+import OrdersManagement from '@/domains/supplier/orders-management/views/OrdersManagement.vue'
+
 const routes = [
     // ✅ Página de bienvenida
     { path: '/', component: WelcomePage },
@@ -38,20 +41,18 @@ const routes = [
         ]
     },
 
-    // Dashboard PROVEEDOR (cuando esté implementado)
+    // Dashboard PROVEEDOR
     {
         path: '/supplier',
-        component: DashboardSupplier, // <--- aquí se mantiene el layout con SidebarSupplier
+        component: DashboardSupplier,
         children: [
-            { path: 'admin', component:{ template: '<h2>Admin View</h2>' }},
-            { path: 'orders', component: { template: '<h2>Admin View</h2>' } },
+            { path: 'admin', component: { template: '<h2>Admin View</h2>' } },
+            { path: 'orders', component: OrdersManagement },
             { path: 'conciliations', component: { template: '<h2>Admin View</h2>' } },
             { path: 'dispatch', component: { template: '<h2>Admin View</h2>' } },
             { path: 'analytics', component: { template: '<h2>Admin View</h2>' } },
             { path: 'prices', component: { template: '<h2>Admin View</h2>' } },
-            { path: 'clients', component: { template: '<h2>Admin View</h2>' } },
-
-            // ...otros hijos
+            { path: 'clients', component: { template: '<h2>Admin View</h2>' } }
         ]
     }
 ]

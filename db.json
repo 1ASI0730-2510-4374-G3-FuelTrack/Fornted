@@ -1318,6 +1318,24 @@
           "total": "S/ 520000000000.00"
         }
       ]
+    },
+    {
+      "id": 1747150985227,
+      "created": "2025-05-13",
+      "user": "Bryan Espejo ",
+      "terminal": "Callao",
+      "amount": "S/ 5200.00",
+      "orderId": "d_sdut7ijk4m",
+      "status": "Requested",
+      "products": [
+        {
+          "product": "GLP",
+          "quantity": 1000,
+          "unit": "gal",
+          "price": "5.20",
+          "total": "S/ 5200.00"
+        }
+      ]
     }
   ],
   "terminals": [
@@ -1342,12 +1360,14 @@
     {
       "id": 1,
       "name": "Sebastián Rosas",
-      "email": "sebastian@fueltrack.com"
+      "email": "sebastian@fueltrack.com",
+      "password": "123456"
     },
     {
       "id": 2,
       "name": "Lucía Mejía",
-      "email": "lucia@fueltrack.com"
+      "email": "lucia@fueltrack.com",
+      "password": "abc123"
     }
   ],
   "providers": [
@@ -1415,6 +1435,15 @@
       "fuel": "Diesel B5",
       "quantity": 1200,
       "status": "En ruta"
+    }
+  ],
+  "suppliers": [
+    {
+      "id": 1,
+      "ruc": "20123456789",
+      "name": "PetroPerú S.A.",
+      "email": "proveedor@fueltrack.com",
+      "password": "admin123"
     }
   ]
 }

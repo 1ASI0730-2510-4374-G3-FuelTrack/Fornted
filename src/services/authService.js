@@ -1,29 +1,29 @@
 // src/domains/shared/services/authService.js
 
-import axios from 'axios'
+import axios from 'axios';
 
-const API_URL = 'http://localhost:3001'
+const API_URL = 'http://localhost:3000';
 
 /**
- * Login para clientes
- * @param {string} email
- * @param {string} password
+ * Realiza el login de un cliente a través del email y password.
+ * @param {string} email - Correo electrónico del cliente.
+ * @param {string} password - Contraseña del cliente.
  * @returns {Promise<{ success: boolean, user?: object, message?: string }>}
  */
 export async function loginClient(email, password) {
     try {
-        const response = await axios.get(`${API_URL}/clients`, {
+        const { data } = await axios.get(`${API_URL}/clients`, {
             params: { email, password }
-        })
+        });
 
-        if (response.data.length > 0) {
-            return { success: true, user: response.data[0] }
+        if (data.length > 0) {
+            return { success: true, user: data[0] };
         }
 
-        return { success: false, message: 'Credenciales inválidas para cliente.' }
+        return { success: false, message: 'Credenciales inválidas para cliente.' };
     } catch (error) {
-        console.error('Error en loginClient:', error)
-        return { success: false, message: 'Error del servidor.' }
+        console.error('[loginClient] Error:', error);
+        return { success: false, message: 'Error del servidor.' };
     }
 }
 
