@@ -1300,6 +1300,24 @@
           "total": "S/ 97776.00"
         }
       ]
+    },
+    {
+      "id": 1747128945791,
+      "created": "2025-05-13",
+      "user": "Bryan Espejo ",
+      "terminal": "Lurín",
+      "amount": "S/ 520000000000.00",
+      "orderId": "d_sbnszbrps9",
+      "status": "Requested",
+      "products": [
+        {
+          "product": "GLP",
+          "quantity": 100000000000,
+          "unit": "gal",
+          "price": "5.20",
+          "total": "S/ 520000000000.00"
+        }
+      ]
     }
   ],
   "terminals": [
@@ -1335,13 +1353,34 @@
   "providers": [
     {
       "id": 1,
+      "company": "PetroFuel S.A.C.",
       "ruc": "10498765432",
-      "company": "PetroFuel S.A.C."
+      "fuels": [
+        "Diesel B5",
+        "GLP"
+      ],
+      "terminals": [
+        "Callao",
+        "Lurín"
+      ],
+      "rating": 4.5,
+      "totalOrders": 32,
+      "deliveredOnTime": 30
     },
     {
       "id": 2,
+      "company": "GasoLima EIRL",
       "ruc": "20587654321",
-      "company": "GasoLima EIRL"
+      "fuels": [
+        "GNV",
+        "GLP"
+      ],
+      "terminals": [
+        "Pisco"
+      ],
+      "rating": 4.1,
+      "totalOrders": 18,
+      "deliveredOnTime": 15
     }
   ],
   "fuels": [
@@ -1359,6 +1398,23 @@
       "id": 3,
       "type": "GNV",
       "pricePerGal": "S/ 4.60"
+    }
+  ],
+  "trucks": [
+    {
+      "id": 1,
+      "driver": "Pedro Guzmán",
+      "plate": "ABC-123",
+      "origin": "Callao",
+      "originCoords": [
+        -12.0611,
+        -77.1188
+      ],
+      "lat": -12.0464,
+      "lng": -77.0428,
+      "fuel": "Diesel B5",
+      "quantity": 1200,
+      "status": "En ruta"
     }
   ]
 }

@@ -6,7 +6,10 @@ import DashboardClient from '@/pages/client/DashboardClient.vue'
 
 // Vistas organizadas (Client)
 import OrdersList from '@/domains/client/orders/views/OrdersList.vue'
-import AnalyticsDashboard from '@/domains/client/analytics/views/AnalyticsDashboard.vue' // <-- Importamos
+import AnalyticsDashboard from '@/domains/client/analytics/views/AnalyticsDashboard.vue'
+import TerminalsDashboard from '@/domains/client/terminals/views/TerminalsDashboard.vue'
+import ProviderDashboard from '@/domains/client/provider/views/ProviderDashboard.vue'
+import WorkflowsDashboard from '@/domains/client/workflows/views/WorkflowsDashboard.vue' // ✅ NUEVO
 
 const routes = [
     { path: '/', redirect: '/login-client' },
@@ -18,11 +21,11 @@ const routes = [
         component: DashboardClient,
         children: [
             { path: 'orders', component: OrdersList },
-            { path: 'analytics', component: AnalyticsDashboard }, // <-- Usamos componente real
-            { path: 'admin', component: { template: '<h2>Admin View</h2>' } },
-            { path: 'terminals', component: { template: '<h2>Terminals View</h2>' } },
-            { path: 'provider', component: { template: '<h2>Provider View</h2>' } },
-            { path: 'workflows', component: { template: '<h2>Workflows View</h2>' } }
+            { path: 'analytics', component: AnalyticsDashboard },
+            { path: 'terminals', component: TerminalsDashboard },
+            { path: 'provider', component: ProviderDashboard },
+            { path: 'workflows', component: WorkflowsDashboard }, // ✅ ACTUALIZADO
+            { path: 'admin', component: { template: '<h2>Admin View</h2>' } }
         ]
     }
 ]

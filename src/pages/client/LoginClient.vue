@@ -37,7 +37,6 @@
 
 <script>
 import { loginClient } from '@/services/authService.js'
-import { getOrders } from '@/domains/client/orders/services/orderService.js'
 
 export default {
   name: 'LoginClient',
