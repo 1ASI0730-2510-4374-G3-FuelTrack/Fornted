@@ -1,0 +1,64 @@
+import axios from 'axios'
+
+const API_URL = 'http://localhost:3000/orders'
+
+/**
+ * Obtener y procesar órdenes desde fake API
+ * @returns {Promise<Array>}
+ */
+export async function getOrders() {
+    try {
+        const response = await axios.get(API_URL)
+        return response.data.map(order => ({
+            id: order.id,
+            created: order.created,
+            user: order.user || '—',
+            terminal: order.terminal || '—',
+            amount: parseAmount(order.amount),
+            orderId: order.orderId,
+            status: order.status,
+            products: order.products || []
+        }))
+    } catch (error) {
+        console.error('Error al obtener órdenes:', error)
+        return []
+    }
+}
+
+/**
+ * Extrae número de monto desde string tipo "S/ 5200.00"
+ * @param {string} amountStr
+ * @returns {number}
+ */
+function parseAmount(amountStr) {
+    if (!amountStr) return 0
+    const numeric = amountStr.replace(/[^\d.]/g, '')
+    return parseFloat(numeric)
+}
+export async function getOrdersWithStatusCount() {
+    try {
+        const response = await axios.get(API_URL)
+        const orders = response.data
+
+        // Contador por estado
+        const counts = orders.reduce((acc, order) => {
+            const status = order.status || 'Unknown'
+            acc[status] = (acc[status] || 0) + 1
+            return acc
+        }, {})
+
+        const uniqueStatuses = Object.entries(counts).map(([status, count]) => ({
+            label: status,
+            value: status,
+            count
+        }))
+
+        return {
+            orders,
+            statuses: uniqueStatuses
+        }
+    } catch (error) {
+        console.error('Error al obtener órdenes:', error)
+        return { orders: [], statuses: [] }
+    }
+}
