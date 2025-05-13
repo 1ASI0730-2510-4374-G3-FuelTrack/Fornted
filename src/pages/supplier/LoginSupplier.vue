@@ -28,6 +28,8 @@
 <script>
 import { loginSupplier } from '@/services/authService'
 
+
+
 export default {
   name: 'LoginSupplier',
   data() {
@@ -43,7 +45,7 @@ export default {
 
       if (result.success) {
         alert('✅ Login exitoso como proveedor')
-        // Redireccionar si se requiere, ej: this.$router.push('/supplier/dashboard')
+        this.$router.push('/supplier/orders-management')
       } else {
         alert('❌ ' + result.message)
       }
