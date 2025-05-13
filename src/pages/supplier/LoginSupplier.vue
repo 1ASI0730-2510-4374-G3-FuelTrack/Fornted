@@ -6,20 +6,35 @@
       <p class="subtitle">Supplier Access Portal</p>
 
       <form @submit.prevent="handleLogin">
-        <label for="ruc" class="visually-hidden">RUC</label>
-        <input type="text" v-model="ruc" placeholder="RUC" required />
+        <input
+            type="text"
+            v-model="ruc"
+            placeholder="RUC"
+            required
+            aria-label="RUC"
+        />
 
-        <label for="email" class="visually-hidden">Email Address</label>
-        <input type="email" v-model="email" placeholder="Email Address" required />
+        <input
+            type="email"
+            v-model="email"
+            placeholder="Email Address"
+            required
+            aria-label="Email Address"
+        />
 
-        <label for="password" class="visually-hidden">Password</label>
-        <input type="password" v-model="password" placeholder="Password" required />
+        <input
+            type="password"
+            v-model="password"
+            placeholder="Password"
+            required
+            aria-label="Password"
+        />
 
         <button type="submit" class="login-button">Log in</button>
       </form>
 
       <p class="register-text">
-        Not a Supplier? <a href="#" class="register-link">Click Here</a>
+        Not a Supplier? <router-link to="/register-supplier" class="register-link">Click here</router-link>
       </p>
     </div>
   </div>
@@ -43,7 +58,7 @@ export default {
 
       if (result.success) {
         alert('✅ Login exitoso como proveedor')
-        // Redireccionar si se requiere, ej: this.$router.push('/supplier/dashboard')
+        this.$router.push('/supplier') // ← cambia la ruta según tu layout
       } else {
         alert('❌ ' + result.message)
       }

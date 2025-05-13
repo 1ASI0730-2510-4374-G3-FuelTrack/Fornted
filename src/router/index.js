@@ -1,21 +1,30 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-// Login
+// Páginas de bienvenida y login
+import WelcomePage from '@/pages/WelcomePage.vue'
 import LoginClient from '@/pages/client/LoginClient.vue'
+import LoginSupplier from '@/pages/supplier/LoginSupplier.vue'
+
+// Dashboards principales
 import DashboardClient from '@/pages/client/DashboardClient.vue'
+import DashboardSupplier from '@/pages/supplier/DashboardSupplier.vue'
 
 // Vistas organizadas (Client)
 import OrdersList from '@/domains/client/orders/views/OrdersList.vue'
 import AnalyticsDashboard from '@/domains/client/analytics/views/AnalyticsDashboard.vue'
 import TerminalsDashboard from '@/domains/client/terminals/views/TerminalsDashboard.vue'
 import ProviderDashboard from '@/domains/client/provider/views/ProviderDashboard.vue'
-import WorkflowsDashboard from '@/domains/client/workflows/views/WorkflowsDashboard.vue' // ✅ NUEVO
+import WorkflowsDashboard from '@/domains/client/workflows/views/WorkflowsDashboard.vue'
 
 const routes = [
-    { path: '/', redirect: '/login-client' },
+    // ✅ Página de bienvenida
+    { path: '/', component: WelcomePage },
 
+    // Login según rol
     { path: '/login-client', component: LoginClient },
+    { path: '/login-supplier', component: LoginSupplier },
 
+    // Dashboard CLIENTE
     {
         path: '/client',
         component: DashboardClient,
@@ -24,8 +33,25 @@ const routes = [
             { path: 'analytics', component: AnalyticsDashboard },
             { path: 'terminals', component: TerminalsDashboard },
             { path: 'provider', component: ProviderDashboard },
-            { path: 'workflows', component: WorkflowsDashboard }, // ✅ ACTUALIZADO
+            { path: 'workflows', component: WorkflowsDashboard },
             { path: 'admin', component: { template: '<h2>Admin View</h2>' } }
+        ]
+    },
+
+    // Dashboard PROVEEDOR (cuando esté implementado)
+    {
+        path: '/supplier',
+        component: DashboardSupplier, // <--- aquí se mantiene el layout con SidebarSupplier
+        children: [
+            { path: 'admin', component:{ template: '<h2>Admin View</h2>' }},
+            { path: 'orders', component: { template: '<h2>Admin View</h2>' } },
+            { path: 'conciliations', component: { template: '<h2>Admin View</h2>' } },
+            { path: 'dispatch', component: { template: '<h2>Admin View</h2>' } },
+            { path: 'analytics', component: { template: '<h2>Admin View</h2>' } },
+            { path: 'prices', component: { template: '<h2>Admin View</h2>' } },
+            { path: 'clients', component: { template: '<h2>Admin View</h2>' } },
+
+            // ...otros hijos
         ]
     }
 ]
