@@ -3,38 +3,57 @@
     <table>
       <thead>
       <tr>
-        <th>Order ID</th>
-        <th>Client</th>
-        <th>Date</th>
+        <th></th>
+        <th>Created</th>
+        <th>Customer</th>
+        <th>Amount</th>
         <th>Terminal</th>
         <th>Status</th>
-        <th>Total</th>
-        <th></th>
+        <th class="text-end">Action</th>
       </tr>
       </thead>
       <tbody>
       <template v-for="order in orders" :key="order.id">
-        <!-- Fila principal de orden -->
+        <!-- Fila principal -->
         <tr class="order-row">
-          <td>{{ order.orderId }}</td>
-          <td>{{ order.user }}</td>
+          <td class="icon-cell">
+            <button class="expand-btn" @click="toggleExpanded(order.id)">
+              <i
+                  :class="[
+                    'ph',
+                    isExpanded(order.id) ? 'ph-caret-down' : 'ph-caret-right'
+                  ]"
+              ></i>
+            </button>
+          </td>
           <td>{{ formatDate(order.created) }}</td>
+          <td>{{ order.user }}</td>
+          <td>{{ formatCurrency(order.amount) }}</td>
           <td>{{ order.terminal }}</td>
           <td>
-            <span class="badge" :class="order.status.toLowerCase()">{{ order.status }}</span>
+              <span class="badge" :class="order.status.toLowerCase()">
+                {{ order.status }}
+              </span>
           </td>
-          <td>{{ formatCurrency(order.amount) }}</td>
-          <td>
-            <button class="expand-btn" @click="toggleExpanded(order.id)">
-              <i :class="['ph', isExpanded(order.id) ? 'ph-caret-up' : 'ph-caret-down']"></i>
+          <td class="text-end">
+            <button
+                class="approve-btn"
+                :disabled="!order.approvable"
+                @click="$emit('approve', order)"
+            >
+              <i class="ph ph-check-circle"></i>
+              Approve
             </button>
           </td>
         </tr>
 
-        <!-- Fila expandida con productos -->
+        <!-- Fila expandida -->
         <tr v-if="isExpanded(order.id)">
           <td colspan="7">
-            <ConciliationRow :products="order.products" />
+            <ConciliationRow
+                :products="order.products"
+                @approve="$emit('approve', order)"
+            />
           </td>
         </tr>
       </template>
@@ -48,8 +67,13 @@ import { ref } from 'vue'
 import ConciliationRow from './ConciliationRow.vue'
 
 const props = defineProps({
-  orders: Array
+  orders: {
+    type: Array,
+    required: true
+  }
 })
+
+const emit = defineEmits(['approve'])
 
 const expandedRows = ref([])
 
@@ -66,10 +90,12 @@ function isExpanded(id) {
 }
 
 function formatCurrency(value) {
+  const val = parseFloat(value)
+  if (isNaN(val)) return 'S/ 0.00'
   return new Intl.NumberFormat('es-PE', {
     style: 'currency',
     currency: 'PEN'
-  }).format(value || 0).replace('PEN', 'S/')
+  }).format(val).replace('PEN', 'S/')
 }
 
 function formatDate(dateStr) {
@@ -106,14 +132,35 @@ td {
   font-size: 0.85rem;
   border-bottom: 1px solid #1f2d44;
   text-align: left;
+  vertical-align: middle;
+}
+
+th.text-end,
+td.text-end {
+  text-align: right;
+}
+
+.icon-cell {
+  width: 40px;
+  text-align: center;
+}
+
+.expand-btn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
 }
 
 .badge {
-  padding: 0.25rem 0.6rem;
-  border-radius: 6px;
+  padding: 0.3rem 0.7rem;
+  border-radius: 8px;
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: capitalize;
+  display: inline-block;
 }
 
 .badge.requested {
@@ -122,20 +169,27 @@ td {
 }
 
 .badge.approved {
-  background-color: #50fa7b22;
-  color: #50fa7b;
+  background-color: #22c55e22;
+  color: #22c55e;
 }
 
-.expand-btn {
-  background: none;
+.approve-btn {
+  background-color: #22c55e;
+  color: white;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 600;
   border: none;
-  color: #94a3b8;
-  font-size: 1rem;
+  border-radius: 8px;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
-.expand-btn:hover {
-  transform: rotate(180deg);
+.approve-btn:disabled {
+  background-color: #64748b;
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 </style>

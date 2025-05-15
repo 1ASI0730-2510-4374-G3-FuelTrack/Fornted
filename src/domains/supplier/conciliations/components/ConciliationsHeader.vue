@@ -1,22 +1,34 @@
 <template>
   <header class="conciliations-header">
-    <!-- Fila superior: título + breadcrumb -->
+    <!-- Fila superior -->
     <div class="top-row">
-      <div class="title-block">
-        <h1 class="title">Conciliations</h1>
-        <p class="subtitle">Manage and verify payment statements</p>
+      <div class="left-block">
+        <div class="title-block">
+          <h1 class="title">Conciliations</h1>
+          <p class="subtitle">Check your order's payments and approve them!</p>
+        </div>
       </div>
 
       <div class="breadcrumb">
-        <span>Home</span>
-        <span class="separator">/</span>
-        <span class="current">Conciliations</span>
+        <span>Home</span> / <strong>Conciliations</strong>
       </div>
     </div>
 
-    <!-- Fila inferior: KPIs + botones -->
-    <div class="bottom-row">
-      <div class="kpi-bar">
+    <!-- Fila media -->
+    <div class="middle-row">
+      <div class="buttons">
+        <button class="load-btn" @click="openModal">
+          <i class="ph ph-upload-simple"></i>
+          Load Bank Statement
+        </button>
+
+        <button class="clear-btn">
+          <i class="ph ph-trash"></i>
+          Clear Document
+        </button>
+      </div>
+
+      <div class="kpi-container">
         <div class="kpi">
           <span class="value">{{ formatNumber(totalOrders) }}</span>
           <span class="label">Total Orders</span>
@@ -32,29 +44,60 @@
           <span class="label">Requested</span>
         </div>
       </div>
+    </div>
 
-      <div class="action-buttons">
-        <button class="load-btn">
-          <i class="ph ph-upload-simple"></i> Load Bank Statement
+    <!-- Filtros -->
+    <div class="bottom-row">
+      <div class="filters">
+        <button class="filter-btn">
+          <i class="ph ph-sliders-horizontal"></i>
+          Filters
         </button>
-        <button class="clear-btn">
-          <i class="ph ph-trash"></i> Clear Document
+        <button class="filter-btn">
+          <i class="ph ph-calendar-blank"></i>
+          Date Range
         </button>
       </div>
     </div>
+
+    <LoadDocumentModal
+        v-if="showModal"
+        @close="closeModal"
+        @submit="handleSubmit"
+    />
   </header>
 </template>
 
 <script setup>
+import { ref } from 'vue'
+import LoadDocumentModal from './LoadDocumentModal.vue'
+
 const props = defineProps({
   totalOrders: Number,
   totalApproved: Number,
   totalRequested: Number
 })
 
+const emit = defineEmits(['load-documents'])
+
+const showModal = ref(false)
+
+function openModal() {
+  showModal.value = true
+}
+
+function closeModal() {
+  showModal.value = false
+}
+
+function handleSubmit(files) {
+  console.log('Archivos cargados:', files)
+  closeModal()
+}
+
 function formatNumber(value) {
-  if (value >= 1000000) return (value / 1000000).toFixed(2) + 'M'
-  if (value >= 1000) return (value / 1000).toFixed(2) + 'K'
+  if (value >= 1_000_000) return (value / 1_000_000).toFixed(2) + 'M'
+  if (value >= 1_000) return (value / 1_000).toFixed(1) + 'K'
   return value
 }
 </script>
@@ -63,99 +106,49 @@ function formatNumber(value) {
 .conciliations-header {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
   margin-bottom: 1.5rem;
+  font-family: 'Segoe UI', sans-serif;
 }
 
 .top-row {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: flex-end;
   flex-wrap: wrap;
+  gap: 2rem;
+  padding-bottom: 0.5rem;
 }
 
-.title-block {
-  display: flex;
-  flex-direction: column;
-}
-
-.title {
+.title-block .title {
   font-size: 1.75rem;
-  font-weight: bold;
+  font-weight: 700;
   color: #ffffff;
+  letter-spacing: -0.5px;
 }
 
-.subtitle {
+.title-block .subtitle {
   font-size: 0.95rem;
-  color: #b0c4de;
-  margin-top: 0.25rem;
+  color: #cbd5e1;
+  margin-top: 0.3rem;
 }
 
 .breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-size: 0.85rem;
-  color: #cbd5e1;
+  font-size: 0.8rem;
+  color: #94a3b8;
 }
 
-.current {
-  font-weight: 600;
-  color: #ffffff;
-}
-
-.bottom-row {
+.middle-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  gap: 2rem;
+  align-items: flex-start;
   flex-wrap: wrap;
+  gap: 1.2rem;
 }
 
-.kpi-bar {
-  display: flex;
-  gap: 2rem;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.kpi {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.value {
-  font-size: 1.6rem;
-  font-weight: bold;
-  color: #ffffff;
-}
-
-.value.approved {
-  color: #50fa7b;
-}
-
-.value.requested {
-  color: #00ffff;
-}
-
-.label {
-  font-size: 0.85rem;
-  color: #cbd5e1;
-  margin-top: 0.2rem;
-}
-
-.divider {
-  width: 1px;
-  height: 2.2rem;
-  background-color: #3b4e68;
-  opacity: 0.5;
-}
-
-.action-buttons {
+.buttons {
   display: flex;
   gap: 1rem;
-  flex-wrap: wrap;
 }
 
 .load-btn,
@@ -163,11 +156,13 @@ function formatNumber(value) {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 1.1rem;
   font-size: 0.85rem;
+  font-weight: 600;
   border-radius: 8px;
-  cursor: pointer;
   border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
   transition: all 0.2s ease;
 }
 
@@ -177,15 +172,82 @@ function formatNumber(value) {
 }
 
 .clear-btn {
+  background-color: #ef4444;
+  color: #ffffff;
+}
+
+.load-btn:hover,
+.clear-btn:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+.kpi-container {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.kpi {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.value {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #ffffff;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.value.approved {
+  color: #22c55e;
+}
+
+.value.requested {
+  color: #00ffff;
+}
+
+.label {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-top: 0.2rem;
+}
+
+.divider {
+  width: 1px;
+  height: 2.2rem;
+  background-color: #334155;
+  opacity: 0.6;
+}
+
+.bottom-row {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.filters {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.filter-btn {
   background-color: #1e2e4a;
   color: #cbd5e1;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
-.load-btn:hover {
-  background-color: #ea580c;
-}
-
-.clear-btn:hover {
+.filter-btn:hover {
   background-color: #324260;
 }
 </style>

@@ -1,6 +1,7 @@
-import axios from 'axios'
+// src/domains/supplier/analytics/services/providerService.js
 
-const API_URL = 'http://localhost:3000'
+import axios from 'axios'
+import API from '@/services/api' // ✅ Ruta común para el endpoint base
 
 /**
  * Obtiene todos los proveedores registrados desde el fake API.
@@ -8,7 +9,7 @@ const API_URL = 'http://localhost:3000'
  */
 export async function getProviders() {
     try {
-        const response = await axios.get(`${API_URL}/providers`)
+        const response = await axios.get(`${API}/providers`)
         return response.data
     } catch (error) {
         console.error('❌ Error al obtener proveedores:', error)
@@ -22,7 +23,7 @@ export async function getProviders() {
  */
 export async function getOrders() {
     try {
-        const response = await axios.get(`${API_URL}/orders`)
+        const response = await axios.get(`${API}/orders`)
         return response.data
     } catch (error) {
         console.error('❌ Error al obtener órdenes:', error)

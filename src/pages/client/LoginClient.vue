@@ -5,8 +5,8 @@
       <h1 class="title">FuelTrack</h1>
       <p class="subtitle">Optimize your fuel orders management</p>
 
-      <form @submit.prevent="handleLogin">
-        <label for="email" class="visually-hidden">Email Address</label>
+      <!-- Simulación de formulario -->
+      <form @submit.prevent="fakeLogin">
         <input
             id="email"
             type="email"
@@ -14,8 +14,6 @@
             placeholder="Email Address"
             required
         />
-
-        <label for="password" class="visually-hidden">Password</label>
         <input
             id="password"
             type="password"
@@ -23,8 +21,7 @@
             placeholder="Password"
             required
         />
-
-        <button type="submit" class="login-button">Log in</button>
+        <button type="submit" class="login-button">Enter as Client</button>
       </form>
 
       <p class="register-text">
@@ -36,8 +33,6 @@
 </template>
 
 <script>
-import { loginClient } from '@/services/authService.js'
-
 export default {
   name: 'LoginClient',
   data() {
@@ -47,20 +42,9 @@ export default {
     }
   },
   methods: {
-    async handleLogin() {
-      try {
-        const result = await loginClient(this.email, this.password)
-
-        if (result.success) {
-          alert('✅ Login exitoso')
-          this.$router.push('/client/orders')
-        } else {
-          alert('❌ ' + result.message)
-        }
-      } catch (error) {
-        console.error('Error en login:', error)
-        alert('❌ Error inesperado al intentar iniciar sesión.')
-      }
+    fakeLogin() {
+      alert('✅ Logged in as demo client')
+      this.$router.push('/client/orders')
     }
   }
 }

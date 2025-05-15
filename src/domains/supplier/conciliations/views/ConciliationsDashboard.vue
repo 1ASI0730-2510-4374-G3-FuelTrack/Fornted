@@ -10,6 +10,7 @@
     <!-- Tabla de conciliaciones -->
     <ConciliationTable
         :orders="orders"
+        @approve="handleApprove"
     />
   </section>
 </template>
@@ -18,7 +19,7 @@
 import { ref, onMounted } from 'vue'
 import ConciliationsHeader from '../components/ConciliationsHeader.vue'
 import ConciliationTable from '../components/ConciliationTable.vue'
-import { getConciliations } from '../services/conciliationService.js'
+import { getConciliations, approveOrder } from '../services/conciliationService.js'
 
 const orders = ref([])
 
@@ -28,6 +29,20 @@ onMounted(async () => {
 
 function getStatusCount(status) {
   return orders.value.filter(order => order.status === status).length
+}
+
+function handleApprove(order) {
+  order.status = 'Approved'
+  order.approved = true
+  order.approvable = false
+
+  approveOrder(order.id)
+      .then(() => {
+        console.log(`Orden ${order.id} aprobada correctamente.`)
+      })
+      .catch(error => {
+        console.error(`Error al aprobar la orden ${order.id}:`, error)
+      })
 }
 </script>
 

@@ -1,6 +1,7 @@
-import axios from 'axios'
+// src/domains/client/workflows/services/workflowService.js
 
-const API_URL = 'http://localhost:3000'
+import axios from 'axios'
+import API from '@/services/api'
 
 /**
  * Obtiene todas las órdenes registradas (con productos y estados).
@@ -9,7 +10,7 @@ const API_URL = 'http://localhost:3000'
  */
 export async function getWorkflows() {
     try {
-        const response = await axios.get(`${API_URL}/orders`)
+        const response = await axios.get(`${API}/orders`)
         return response.data
     } catch (error) {
         console.error('❌ Error al obtener workflows:', error)

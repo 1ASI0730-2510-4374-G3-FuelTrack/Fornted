@@ -55,7 +55,7 @@ const formData = ref({
       totalPrice: '0.00'
     }
   ],
-  payments: []
+  payments: [] // Este campo guarda los pagos por cada producto (array por índice)
 })
 
 const currentComponent = computed(() => {
@@ -81,6 +81,28 @@ function prevStep() {
 
 async function confirmOrder() {
   try {
+    const enrichedProducts = formData.value.details.map((detail, index) => {
+      const quantity = Number(detail.quantity)
+      const unitPrice = quantity > 0
+          ? (parseFloat(detail.totalPrice.replace('S/', '').trim()) / quantity).toFixed(2)
+          : '0.00'
+
+      return {
+        product: detail.product,
+        quantity,
+        unit: 'gal',
+        price: unitPrice,
+        total: detail.totalPrice,
+        payments: (formData.value.payments[index] || []).map(p => ({
+          bank: p.account,
+          amount: p.amount,
+          date: p.date,
+          operation: p.operationNumber,
+          validated: false
+        }))
+      }
+    })
+
     await createOrder({
       id: Date.now(),
       created: new Date().toISOString().split('T')[0],
@@ -89,20 +111,16 @@ async function confirmOrder() {
       amount: calcularTotal(formData.value.details),
       orderId: generarOrderId(),
       status: 'Requested',
-      products: formData.value.details.map(d => ({
-        product: d.product,
-        quantity: d.quantity,
-        unit: 'gal',
-        price: d.quantity > 0 ? (parseFloat(d.totalPrice.replace('S/', '').trim()) / d.quantity).toFixed(2) : '0.00',
-        total: d.totalPrice
-      }))
+      products: enrichedProducts
     })
 
     alert('✅ Orden creada exitosamente.')
     window.location.reload()
   } catch (err) {
+    console.error('❌ Detalle del error en confirmOrder:', err.message, err.response?.data)
     alert('❌ Hubo un error al crear la orden.')
   }
+
 }
 
 function generarOrderId() {

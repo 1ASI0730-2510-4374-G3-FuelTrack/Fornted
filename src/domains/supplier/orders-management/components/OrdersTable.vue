@@ -52,7 +52,7 @@
                 <td>{{ product.quantity }}</td>
                 <td>{{ product.unit }}</td>
                 <td>{{ formatCurrency(product.price) }}</td>
-                <td>{{ product.total }}</td>
+                <td>{{ formatCurrency(product.total) }}</td>
               </tr>
               </tbody>
             </table>
@@ -85,14 +85,18 @@ function toggleExpanded(orderId) {
   }
 }
 
-function formatCurrency(amount) {
+function formatCurrency(value) {
+  const amount = typeof value === 'string'
+      ? parseFloat(value.replace(/[^\d.]/g, ''))
+      : value || 0
+
   if (isNaN(amount)) return '—'
-  const formatted = new Intl.NumberFormat('es-PE', {
+
+  return new Intl.NumberFormat('es-PE', {
     style: 'currency',
     currency: 'PEN',
     minimumFractionDigits: 2
-  }).format(amount)
-  return formatted.replace('PEN', 'S/')
+  }).format(amount).replace('PEN', 'S/')
 }
 
 function formatDate(dateStr) {

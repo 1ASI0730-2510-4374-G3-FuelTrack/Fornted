@@ -1,39 +1,44 @@
-import axios from 'axios'
+// src/domains/supplier/conciliations/services/conciliationService.js
 
-const API_URL = 'http://localhost:3000/orders'
+import axios from 'axios'
+import API from '@/services/api'
+import ConciliationOrder from '../models/ConciliationOrder'
+
+const ORDERS_URL = `${API}/orders`
 
 /**
- * Obtener todas las órdenes con sus productos (y pagos si existen)
- * @returns {Promise<Array>}
+ * Obtener todas las órdenes desde la API y mapearlas a instancias de ConciliationOrder
+ * @returns {Promise<ConciliationOrder[]>}
  */
 export async function getConciliations() {
     try {
-        const response = await axios.get(API_URL)
-
-        return response.data.map(order => ({
-            id: order.id,
-            created: order.created,
-            user: order.user || '—',
-            terminal: order.terminal || '—',
-            amount: parseAmount(order.amount),
-            orderId: order.orderId,
-            status: order.status,
-            products: order.products || [],
-            approved: false // campo de control adicional
-        }))
+        const response = await axios.get(ORDERS_URL)
+        return response.data.map(order => new ConciliationOrder(order))
     } catch (error) {
-        console.error('Error al obtener conciliaciones:', error)
+        console.error('[ConciliationService] Error al obtener órdenes:', error.message)
         return []
     }
 }
 
 /**
- * Convertir "S/ 5200.00" a número
- * @param {string} str
- * @returns {number}
+ * Actualizar una orden como aprobada
+ * @param {number} orderId - ID único de la orden a aprobar
+ * @returns {Promise<object>} - Orden actualizada desde la API
  */
-function parseAmount(str) {
-    if (!str) return 0
-    const cleaned = str.replace(/[^\d.]/g, '')
-    return parseFloat(cleaned)
+export async function approveOrder(orderId) {
+    if (!orderId) {
+        console.warn('[ConciliationService] orderId inválido')
+        return
+    }
+
+    try {
+        const response = await axios.patch(`${ORDERS_URL}/${orderId}`, {
+            approved: true,
+            status: 'Approved'
+        })
+        return response.data
+    } catch (error) {
+        console.error(`[ConciliationService] Error al aprobar la orden ${orderId}:`, error.message)
+        throw error
+    }
 }

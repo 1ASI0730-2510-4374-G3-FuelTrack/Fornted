@@ -3,11 +3,11 @@
     <table>
       <thead>
       <tr>
-        <th>Bank</th>
-        <th>Amount</th>
+        <th>Bank Account</th>
+        <th>Payment Amount</th>
         <th>Date</th>
-        <th>Operation #</th>
-        <th>Validated</th>
+        <th>Operation Number</th>
+        <th class="text-center">Validated</th>
       </tr>
       </thead>
       <tbody>
@@ -16,8 +16,21 @@
         <td>{{ formatCurrency(payment.amount) }}</td>
         <td>{{ formatDate(payment.date) }}</td>
         <td>{{ payment.operation }}</td>
-        <td>
-          <input type="checkbox" v-model="payment.validated" />
+        <td class="checkbox-cell">
+          <label class="checkbox-wrapper">
+            <input
+                type="checkbox"
+                v-model="payment.validated"
+                @change="emitChange"
+            />
+            <i
+                :class="[
+                  'ph',
+                  payment.validated ? 'ph-check-circle' : 'ph-circle'
+                ]"
+                :style="{ color: payment.validated ? '#22c55e' : '#f97316' }"
+            ></i>
+          </label>
         </td>
       </tr>
       </tbody>
@@ -30,12 +43,30 @@
 </template>
 
 <script setup>
+import { watch } from 'vue'
+
 const props = defineProps({
   product: {
     type: Object,
     required: true
   }
 })
+
+const emit = defineEmits(['update'])
+
+watch(
+    () => props.product.payments,
+    () => {
+      emitChange()
+    },
+    { deep: true, immediate: true }
+)
+
+function emitChange() {
+  const payments = props.product.payments || []
+  const allValid = payments.length > 0 && payments.every(p => p.validated === true)
+  emit('update', { validated: allValid })
+}
 
 function formatCurrency(value) {
   const val = parseFloat(value)
@@ -73,7 +104,7 @@ table {
 
 th,
 td {
-  padding: 0.6rem 0.8rem;
+  padding: 0.7rem 1rem;
   font-size: 0.82rem;
   text-align: left;
   border-bottom: 1px solid #1e324e;
@@ -83,10 +114,30 @@ thead {
   background-color: #1c2e4a;
 }
 
-input[type='checkbox'] {
-  transform: scale(1.1);
+.text-center {
+  text-align: center;
+}
+
+.checkbox-cell {
+  text-align: center;
+}
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  width: 24px;
+  position: relative;
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+  opacity: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
   cursor: pointer;
-  accent-color: #22c55e;
+  margin: 0;
 }
 
 .no-payments {

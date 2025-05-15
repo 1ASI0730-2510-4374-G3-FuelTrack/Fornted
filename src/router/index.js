@@ -19,6 +19,10 @@ import WorkflowsDashboard from '@/domains/client/workflows/views/WorkflowsDashbo
 // Vistas organizadas (Supplier)
 import OrdersManagement from '@/domains/supplier/orders-management/views/OrdersManagement.vue'
 import ConciliationsDashboard from '@/domains/supplier/conciliations/views/ConciliationsDashboard.vue'
+import DispatchDashboard from '@/domains/supplier/dispatch/views/DispatchDashboard.vue'
+import ProviderAnalytics from "@/domains/supplier/analytics/views/ProviderAnalytics.vue";
+import PricesDashboard from "@/domains/supplier/prices/views/PricesDashboard.vue";
+import ClientsDashboard from "@/domains/supplier/clients/views/ClientsDashboard.vue";
 
 const routes = [
     // ✅ Página de bienvenida
@@ -50,10 +54,10 @@ const routes = [
             { path: 'admin', component: { template: '<h2>Admin View</h2>' } },
             { path: 'orders', component: OrdersManagement },
             { path: 'conciliations', component: ConciliationsDashboard },
-            { path: 'dispatch', component: { template: '<h2>Admin View</h2>' } },
-            { path: 'analytics', component: { template: '<h2>Admin View</h2>' } },
-            { path: 'prices', component: { template: '<h2>Admin View</h2>' } },
-            { path: 'clients', component: { template: '<h2>Admin View</h2>' } }
+            { path: 'dispatch', component: DispatchDashboard },
+            { path: 'analytics', component: ProviderAnalytics },
+            { path: 'prices', component: PricesDashboard },
+            { path: 'clients', component: ClientsDashboard }
         ]
     }
 ]

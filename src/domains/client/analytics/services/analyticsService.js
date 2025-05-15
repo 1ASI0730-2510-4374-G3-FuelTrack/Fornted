@@ -1,6 +1,9 @@
-import axios from 'axios'
+// src/domains/supplier/analytics/services/analyticsService.js
 
-const API_URL = 'http://localhost:3000/orders'
+import axios from 'axios'
+import API from '@/services/api' // importa la base centralizada
+
+const API_URL = `${API}/orders`
 
 export async function fetchOrders() {
     try {

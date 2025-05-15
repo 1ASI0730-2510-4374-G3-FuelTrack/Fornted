@@ -1,8 +1,7 @@
 // src/domains/client/terminals/services/terminalService.js
 
 import axios from 'axios'
-
-const BASE_URL = 'http://localhost:3000'
+import API from '@/services/api' // ✅ Importa base centralizada
 
 /**
  * Obtiene la lista de terminales disponibles
@@ -10,7 +9,7 @@ const BASE_URL = 'http://localhost:3000'
  */
 export async function getTerminals() {
     try {
-        const response = await axios.get(`${BASE_URL}/terminals`)
+        const response = await axios.get(`${API}/terminals`)
         return response.data
     } catch (error) {
         console.error('Error al obtener terminales:', error)
@@ -24,7 +23,7 @@ export async function getTerminals() {
  */
 export async function getOrders() {
     try {
-        const response = await axios.get(`${BASE_URL}/orders`)
+        const response = await axios.get(`${API}/orders`)
         return response.data
     } catch (error) {
         console.error('Error al obtener órdenes:', error)
@@ -38,7 +37,7 @@ export async function getOrders() {
  */
 export async function getTrucks() {
     try {
-        const response = await axios.get(`${BASE_URL}/trucks`)
+        const response = await axios.get(`${API}/trucks`)
         return response.data
     } catch (error) {
         console.error('Error al obtener camiones:', error)

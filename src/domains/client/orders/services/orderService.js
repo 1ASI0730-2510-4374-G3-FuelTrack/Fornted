@@ -1,8 +1,9 @@
 // src/domains/client/orders/services/orderService.js
 
 import axios from 'axios'
+import API from '@/services/api' // ✅ Importar la base común
 
-const API_URL = 'http://localhost:3000/orders'
+const API_URL = `${API}/orders`
 
 /**
  * Obtener todas las órdenes desde la API
@@ -25,9 +26,10 @@ export async function getOrders() {
  */
 export async function createOrder(order) {
     try {
-        await axios.post(API_URL, order)
+        const res = await axios.post(API_URL, order)
+        return res.data
     } catch (error) {
-        console.error('Error al crear orden:', error)
+        console.error('Error creando orden:', error)
         throw error
     }
 }

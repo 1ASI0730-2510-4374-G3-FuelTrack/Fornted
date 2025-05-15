@@ -1,6 +1,9 @@
-import axios from 'axios'
+// src/domains/provider/orders/services/orderService.js
 
-const API_URL = 'http://localhost:3000/orders'
+import axios from 'axios'
+import API from '@/services/api'
+
+const API_URL = `${API}/orders`
 
 /**
  * Obtener y procesar órdenes desde fake API
@@ -35,12 +38,16 @@ function parseAmount(amountStr) {
     const numeric = amountStr.replace(/[^\d.]/g, '')
     return parseFloat(numeric)
 }
+
+/**
+ * Devuelve las órdenes junto con un resumen por estado
+ * @returns {Promise<{orders: Array, statuses: Array}>}
+ */
 export async function getOrdersWithStatusCount() {
     try {
         const response = await axios.get(API_URL)
         const orders = response.data
 
-        // Contador por estado
         const counts = orders.reduce((acc, order) => {
             const status = order.status || 'Unknown'
             acc[status] = (acc[status] || 0) + 1

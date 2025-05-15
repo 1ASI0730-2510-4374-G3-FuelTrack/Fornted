@@ -1,8 +1,9 @@
 // src/domains/client/orders/services/fuelService.js
 
 import axios from 'axios'
+import API from '@/services/api' // ✅ importa la base centralizada
 
-const API_URL = 'http://localhost:3000/fuels'
+const API_URL = `${API}/fuels`
 
 /**
  * Obtiene la lista de combustibles desde la API
