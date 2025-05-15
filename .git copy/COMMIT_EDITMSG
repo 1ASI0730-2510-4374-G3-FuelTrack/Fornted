@@ -1,0 +1,24 @@
+feat: add supplier analytics, client management, and dispatch modules with components and services
+
+- Implemented Supplier Analytics module:
+  • Service: analyticsService.js
+  • Components: AnalyticsSummaryCard.vue, BarChartFuel.vue
+  • Utils: chartUtils.js
+  • Routing support added in index.js
+
+- Added Supplier Clients management:
+  • View: ClientsDashboard.vue
+  • Components: ClientList.vue
+  • Service: clientService.js
+  • Utilities: clientUtils.js
+
+- Developed full Dispatch management module:
+  • Views: DispatchDashboard.vue
+  • Components: AssignCargoModal.vue, DispatchRow.vue, DispatchTable.vue
+  • Services: dispatchService.js
+  • Models: DispatchOrder.js, Driver.js
+
+- Included missing model and utilities for dispatch and analytics workflows
+- All components are fully integrated with the fake API and styled to match the supplier dashboard
+
+This commit delivers a full set of supplier-side tools for operational management: dashboards, dispatch planning, analytics tracking, and client coordination.

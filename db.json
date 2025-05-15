@@ -1,0 +1,458 @@
+{
+  "orders": [
+    {
+      "id": "1001",
+      "created": "2025-05-10",
+      "user": "Lucía Mejía",
+      "terminal": "Lurín",
+      "amount": "S/ 3000.00",
+      "orderId": "d_test_1",
+      "status": "Released",
+      "approved": true,
+      "products": [
+        {
+          "product": "Diesel B5",
+          "quantity": 300,
+          "unit": "gal",
+          "price": "9.00",
+          "total": "S/ 2700.00",
+          "payments": [
+            {
+              "bank": "BCP",
+              "amount": 1500,
+              "date": "2025-05-10",
+              "operation": "000111",
+              "validated": true
+            },
+            {
+              "bank": "BBVA",
+              "amount": 1200,
+              "date": "2025-05-11",
+              "operation": "000112",
+              "validated": false
+            }
+          ]
+        },
+        {
+          "product": "GLP",
+          "quantity": 100,
+          "unit": "gal",
+          "price": "5.20",
+          "total": "S/ 520.00",
+          "payments": [
+            {
+              "bank": "BCP",
+              "amount": 1500,
+              "date": "2025-05-10",
+              "operation": "000111",
+              "validated": true
+            },
+            {
+              "bank": "BBVA",
+              "amount": 1200,
+              "date": "2025-05-11",
+              "operation": "000112",
+              "validated": false
+            }
+          ]
+        }
+      ],
+      "transport": {
+        "truck": {
+          "id": "1",
+          "driver": "Pedro Guzmán",
+          "plate": "ABC-123",
+          "origin": "Callao",
+          "originCoords": [
+            -12.0611,
+            -77.1188
+          ],
+          "lat": -12.0464,
+          "lng": -77.0428,
+          "fuel": "Diesel B5",
+          "quantity": 1200,
+          "status": "En ruta"
+        },
+        "driver": {
+          "id": "1",
+          "name": "Carlos Díaz",
+          "license": "B-123456",
+          "experience": 5
+        },
+        "tank": {
+          "id": "1",
+          "code": "TNK-001",
+          "capacity": 6000,
+          "status": "Available"
+        }
+      }
+    },
+    {
+      "id": "1002",
+      "created": "2025-05-10",
+      "user": "Sebastián Rosas",
+      "terminal": "Pisco",
+      "amount": "S/ 6000.00",
+      "orderId": "d_test_2",
+      "status": "Released",
+      "approved": true,
+      "products": [
+        {
+          "product": "Diesel B5",
+          "quantity": 300,
+          "unit": "gal",
+          "price": "9.00",
+          "total": "S/ 2700.00",
+          "payments": [
+            {
+              "bank": "BCP",
+              "amount": 1500,
+              "date": "2025-05-10",
+              "operation": "000111",
+              "validated": true
+            },
+            {
+              "bank": "BBVA",
+              "amount": 1200,
+              "date": "2025-05-11",
+              "operation": "000112",
+              "validated": false
+            }
+          ]
+        },
+        {
+          "product": "GLP",
+          "quantity": 100,
+          "unit": "gal",
+          "price": "5.20",
+          "total": "S/ 520.00",
+          "payments": [
+            {
+              "bank": "BCP",
+              "amount": 1500,
+              "date": "2025-05-10",
+              "operation": "000111",
+              "validated": true
+            },
+            {
+              "bank": "BBVA",
+              "amount": 1200,
+              "date": "2025-05-11",
+              "operation": "000112",
+              "validated": false
+            }
+          ]
+        }
+      ],
+      "transport": {
+        "truck": {
+          "id": "1",
+          "driver": "Pedro Guzmán",
+          "plate": "ABC-123",
+          "origin": "Callao",
+          "originCoords": [
+            -12.0611,
+            -77.1188
+          ],
+          "lat": -12.0464,
+          "lng": -77.0428,
+          "fuel": "Diesel B5",
+          "quantity": 1200,
+          "status": "En ruta"
+        },
+        "driver": {
+          "id": "1",
+          "name": "Carlos Díaz",
+          "license": "B-123456",
+          "experience": 5
+        },
+        "tank": {
+          "id": "1",
+          "code": "TNK-001",
+          "capacity": 6000,
+          "status": "Available"
+        }
+      }
+    },
+    {
+      "id": "1003",
+      "created": "2025-05-10",
+      "user": "Lucía Mejía",
+      "terminal": "Callao",
+      "amount": "S/ 9000.00",
+      "orderId": "d_test_3",
+      "status": "Approved",
+      "approved": true,
+      "products": [
+        {
+          "product": "Diesel B5",
+          "quantity": 300,
+          "unit": "gal",
+          "price": "9.00",
+          "total": "S/ 2700.00",
+          "payments": [
+            {
+              "bank": "BCP",
+              "amount": 1500,
+              "date": "2025-05-10",
+              "operation": "000111",
+              "validated": true
+            },
+            {
+              "bank": "BBVA",
+              "amount": 1200,
+              "date": "2025-05-11",
+              "operation": "000112",
+              "validated": false
+            }
+          ]
+        },
+        {
+          "product": "GLP",
+          "quantity": 100,
+          "unit": "gal",
+          "price": "5.20",
+          "total": "S/ 520.00",
+          "payments": [
+            {
+              "bank": "BCP",
+              "amount": 1500,
+              "date": "2025-05-10",
+              "operation": "000111",
+              "validated": true
+            },
+            {
+              "bank": "BBVA",
+              "amount": 1200,
+              "date": "2025-05-11",
+              "operation": "000112",
+              "validated": false
+            }
+          ]
+        }
+      ],
+      "transport": {
+        "truck": {
+          "id": "1",
+          "driver": "Pedro Guzmán",
+          "plate": "ABC-123",
+          "origin": "Callao",
+          "originCoords": [
+            -12.0611,
+            -77.1188
+          ],
+          "lat": -12.0464,
+          "lng": -77.0428,
+          "fuel": "Diesel B5",
+          "quantity": 1200,
+          "status": "En ruta"
+        },
+        "driver": {
+          "id": "1",
+          "name": "Carlos Díaz",
+          "license": "B-123456",
+          "experience": 5
+        },
+        "tank": {
+          "id": "1",
+          "code": "TNK-001",
+          "capacity": 6000,
+          "status": "Available"
+        }
+      }
+    },
+    {
+      "id": "1747280139535",
+      "created": "2025-05-15",
+      "user": "brayn",
+      "terminal": "Callao",
+      "amount": "S/ 108.00",
+      "orderId": "d_0w0theeohp",
+      "status": "Released",
+      "products": [
+        {
+          "product": "Diesel B5",
+          "quantity": 12,
+          "unit": "gal",
+          "price": "9.00",
+          "total": "S/ 108.00",
+          "payments": [
+            {
+              "bank": "BCP",
+              "amount": 12,
+              "date": "2025-05-14T22:35",
+              "operation": "123",
+              "validated": false
+            }
+          ]
+        }
+      ],
+      "approved": true,
+      "transport": {
+        "truck": {
+          "id": "1",
+          "driver": "Pedro Guzmán",
+          "plate": "ABC-123",
+          "origin": "Callao",
+          "originCoords": [
+            -12.0611,
+            -77.1188
+          ],
+          "lat": -12.0464,
+          "lng": -77.0428,
+          "fuel": "Diesel B5",
+          "quantity": 1200,
+          "status": "En ruta"
+        },
+        "driver": {
+          "id": "1",
+          "name": "Carlos Díaz",
+          "license": "B-123456",
+          "experience": 5
+        },
+        "tank": {
+          "id": "1",
+          "code": "TNK-001",
+          "capacity": 6000,
+          "status": "Available"
+        }
+      }
+    }
+  ],
+  "terminals": [
+    {
+      "id": "1",
+      "name": "Callao"
+    },
+    {
+      "id": "2",
+      "name": "Lurín"
+    },
+    {
+      "id": "3",
+      "name": "Pisco"
+    },
+    {
+      "id": "4",
+      "name": "Monte Azul"
+    }
+  ],
+  "clients": [
+    {
+      "id": "1",
+      "name": "Sebastián Rosas",
+      "email": "sebastian@fueltrack.com",
+      "password": "123456"
+    },
+    {
+      "id": "2",
+      "name": "Lucía Mejía",
+      "email": "lucia@fueltrack.com",
+      "password": "abc123"
+    }
+  ],
+  "providers": [
+    {
+      "id": "1",
+      "company": "PetroFuel S.A.C.",
+      "ruc": "10498765432",
+      "fuels": [
+        "Diesel B5",
+        "GLP"
+      ],
+      "terminals": [
+        "Callao",
+        "Lurín"
+      ],
+      "rating": 4.5,
+      "totalOrders": 32,
+      "deliveredOnTime": 30
+    },
+    {
+      "id": "2",
+      "company": "GasoLima EIRL",
+      "ruc": "20587654321",
+      "fuels": [
+        "GNV",
+        "GLP"
+      ],
+      "terminals": [
+        "Pisco"
+      ],
+      "rating": 4.1,
+      "totalOrders": 18,
+      "deliveredOnTime": 15
+    }
+  ],
+  "fuels": [
+    {
+      "id": "1",
+      "type": "Diesel B5",
+      "pricePerGal": "S/ 9.00"
+    },
+    {
+      "id": "2",
+      "type": "GLP",
+      "pricePerGal": "S/ 5.20"
+    },
+    {
+      "id": "3",
+      "type": "GNV",
+      "pricePerGal": "S/ 4.60"
+    }
+  ],
+  "trucks": [
+    {
+      "id": "1",
+      "driver": "Pedro Guzmán",
+      "plate": "ABC-123",
+      "origin": "Callao",
+      "originCoords": [
+        -12.0611,
+        -77.1188
+      ],
+      "lat": -12.0464,
+      "lng": -77.0428,
+      "fuel": "Diesel B5",
+      "quantity": 1200,
+      "status": "En ruta"
+    }
+  ],
+  "suppliers": [
+    {
+      "id": "1",
+      "ruc": "20123456789",
+      "name": "PetroPerú S.A.",
+      "email": "proveedor@fueltrack.com",
+      "password": "admin123"
+    }
+  ],
+  "drivers": [
+    {
+      "id": "1",
+      "name": "Carlos Díaz",
+      "license": "B-123456",
+      "experience": 5
+    },
+    {
+      "id": "2",
+      "name": "Ana Torres",
+      "license": "C-789012",
+      "experience": 8
+    }
+  ],
+  "tanks": [
+    {
+      "id": "1",
+      "code": "TNK-001",
+      "capacity": 6000,
+      "status": "Available"
+    },
+    {
+      "id": "2",
+      "code": "TNK-002",
+      "capacity": 8000,
+      "status": "Available"
+    }
+  ]
+}
