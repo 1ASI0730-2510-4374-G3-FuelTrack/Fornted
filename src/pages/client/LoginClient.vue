@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import '@/assets/styles/pages/LoginClient.css'
 export default {
   name: 'LoginClient',
   data() {

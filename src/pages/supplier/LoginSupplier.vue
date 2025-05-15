@@ -41,6 +41,7 @@
 </template>
 
 <script>
+import '@/assets/styles/pages/LoginClient.css'
 export default {
   name: 'LoginSupplier',
   data() {
