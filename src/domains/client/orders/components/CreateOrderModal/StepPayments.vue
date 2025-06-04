@@ -42,6 +42,7 @@
           <div class="bank-wrapper">
             <select
                 :value="payment.account"
+                :class="{ invalid: submitted && !payment.account }"
                 @input="e => updatePayment(detailIndex, paymentIndex, 'account', e.target.value)"
             >
               <option value="">Seleccione banco</option>
@@ -56,6 +57,7 @@
                 class="bank-logo"
             />
           </div>
+          <span v-if="submitted && !payment.account" class="error">Requerido</span>
           </div>
 
         <div class="field">
@@ -64,9 +66,11 @@
               type="number"
               min="0"
               :value="payment.amount"
+              :class="{ invalid: submitted && (!payment.amount || payment.amount <= 0) }"
               @input="e => updatePayment(detailIndex, paymentIndex, 'amount', Number(e.target.value))"
               placeholder="Ingrese el monto"
           />
+          <span v-if="submitted && (!payment.amount || payment.amount <= 0)" class="error">Requerido</span>
         </div>
 
         <div class="field">
@@ -74,8 +78,10 @@
           <input
               type="datetime-local"
               :value="payment.date"
+              :class="{ invalid: submitted && !payment.date }"
               @input="e => updatePayment(detailIndex, paymentIndex, 'date', e.target.value)"
           />
+          <span v-if="submitted && !payment.date" class="error">Requerido</span>
         </div>
 
         <div class="field with-remove">
@@ -84,6 +90,7 @@
             <input
                 type="text"
                 :value="payment.operationNumber"
+                :class="{ invalid: submitted && !payment.operationNumber }"
                 @input="e => updatePayment(detailIndex, paymentIndex, 'operationNumber', e.target.value)"
                 placeholder="Ingrese número"
             />
@@ -96,6 +103,7 @@
               <i class="ph ph-trash-simple"></i>
             </button>
           </div>
+          <span v-if="submitted && !payment.operationNumber" class="error">Requerido</span>
         </div>
       </div>
       </TransitionGroup>
@@ -120,7 +128,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, watch, ref } from 'vue'
 
 const props = defineProps({
   modelValue: {
@@ -129,7 +137,9 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'invalid'])
+
+const submitted = ref(false)
 
 const orderDetails = computed(() => props.modelValue.details || [])
 const payments = computed(() => props.modelValue.payments || [])
@@ -139,6 +149,14 @@ const bankLogos = {
   BBVA: '/img/banks/bbva.png',
   Interbank: '/img/banks/interbank.png'
 }
+
+watch(payments, () => {
+  submitted.value = true
+  const invalid = payments.value.some(group =>
+    group.some(p => !p.account || p.amount <= 0 || !p.date || !p.operationNumber)
+  )
+  if (invalid) emit('invalid')
+}, { deep: true })
 
 function addPayment(detailIndex) {
   const updated = [...payments.value]
@@ -276,6 +294,18 @@ function updatePayment(detailIndex, paymentIndex, field, value) {
   font-size: 0.9rem;
   background-color: #f9fafb;
   transition: border-color 0.2s;
+}
+
+input.invalid,
+select.invalid {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+.error {
+  font-size: 0.75rem;
+  color: #dc2626;
+  margin-top: 0.25rem;
 }
 
 .field input:focus,
