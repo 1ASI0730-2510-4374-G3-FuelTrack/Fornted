@@ -81,6 +81,7 @@
 import { ref, computed } from 'vue'
 import { PhX } from '@phosphor-icons/vue'
 import { assignTransportToOrder } from '../services/dispatchService'
+import { log, error as logError } from '@/services/logger'
 
 const props = defineProps({
   product: Object,
@@ -89,7 +90,7 @@ const props = defineProps({
   tanks: Array,
   orderId: Number
 })
-console.log('🧪 Modal abierto con orderId:', props.orderId)
+log('🧪 Modal abierto con orderId:', props.orderId)
 
 const emit = defineEmits(['close'])
 
@@ -125,18 +126,18 @@ async function saveAssignment() {
     driver: selectedDriver.value,
     tank: selectedTank.value
   }
-  console.log('>>> Modal saveAssignment payload:', props.orderId, payload)
+  log('>>> Modal saveAssignment payload:', props.orderId, payload)
 
   try {
     const result = await assignTransportToOrder(props.orderId, payload)
-    console.log('<<< Modal saveAssignment result:', result)
+    log('<<< Modal saveAssignment result:', result)
     // Toast de éxito
     window.alert('✅ Order released successfully!')
     emit('close')
   } catch (error) {
     // Mostrar mensaje detallado
     const msg = error.response?.data || error.message
-    console.error('❌ Error saving transport assignment detail:', msg)
+    logError('❌ Error saving transport assignment detail:', msg)
     window.alert(`❌ Error saving transport assignment: ${msg}`)
   }
 }

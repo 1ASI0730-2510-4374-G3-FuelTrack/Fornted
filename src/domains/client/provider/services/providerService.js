@@ -2,6 +2,7 @@
 
 import axios from 'axios'
 import API from '@/services/api' // ✅ Ruta común para el endpoint base
+import { error as logError } from '@/services/logger'
 
 /**
  * Obtiene todos los proveedores registrados desde el fake API.
@@ -12,7 +13,7 @@ export async function getProviders() {
         const response = await axios.get(`${API}/providers`)
         return response.data
     } catch (error) {
-        console.error('❌ Error al obtener proveedores:', error)
+        logError('❌ Error al obtener proveedores:', error)
         return []
     }
 }
@@ -26,7 +27,7 @@ export async function getOrders() {
         const response = await axios.get(`${API}/orders`)
         return response.data
     } catch (error) {
-        console.error('❌ Error al obtener órdenes:', error)
+        logError('❌ Error al obtener órdenes:', error)
         return []
     }
 }

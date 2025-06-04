@@ -26,6 +26,7 @@ import AnalyticsHeader from '../components/AnalyticsHeader.vue'
 import OperatorList from '../components/OperatorList.vue'
 import WeeklyChart from '../components/WeeklyChart.vue'
 import { getOrders } from '@/domains/client/orders/services/orderService.js'
+import { error as logError } from '@/services/logger'
 
 // Terminales disponibles
 const terminals = ['Callao', 'Lurín', 'Pisco', 'Monte Azul']
@@ -38,7 +39,7 @@ onMounted(async () => {
   try {
     orders.value = await getOrders()
   } catch (error) {
-    console.error('❌ Error al cargar órdenes en analytics:', error)
+    logError('❌ Error al cargar órdenes en analytics:', error)
   }
 })
 </script>

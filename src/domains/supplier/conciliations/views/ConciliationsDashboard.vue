@@ -20,6 +20,7 @@ import { ref, onMounted } from 'vue'
 import ConciliationsHeader from '../components/ConciliationsHeader.vue'
 import ConciliationTable from '../components/ConciliationTable.vue'
 import { getConciliations, approveOrder } from '../services/conciliationService.js'
+import { log, error as logError } from '@/services/logger'
 
 const orders = ref([])
 
@@ -38,10 +39,10 @@ function handleApprove(order) {
 
   approveOrder(order.id)
       .then(() => {
-        console.log(`Orden ${order.id} aprobada correctamente.`)
+        log(`Orden ${order.id} aprobada correctamente.`)
       })
       .catch(error => {
-        console.error(`Error al aprobar la orden ${order.id}:`, error)
+        logError(`Error al aprobar la orden ${order.id}:`, error)
       })
 }
 </script>

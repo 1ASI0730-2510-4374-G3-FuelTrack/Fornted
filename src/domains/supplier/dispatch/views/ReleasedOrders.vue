@@ -60,6 +60,7 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import API_BASE from '@/services/api'
+import { error as logError } from '@/services/logger'
 
 const orders = ref([])
 
@@ -68,7 +69,7 @@ async function fetchReleasedOrders() {
     const res = await axios.get(`${API_BASE}/orders?status=Released`)
     orders.value = res.data
   } catch (error) {
-    console.error('❌ Error fetching released orders:', error)
+    logError('❌ Error fetching released orders:', error)
   }
 }
 

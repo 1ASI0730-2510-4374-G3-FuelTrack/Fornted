@@ -2,6 +2,7 @@
 
 import axios from 'axios'
 import API_BASE from './api'
+import { error as logError } from '@/services/logger'
 
 const API_URL = API_BASE
 
@@ -23,7 +24,7 @@ export async function loginClient(email, password) {
 
         return { success: false, message: 'Credenciales inválidas para cliente.' };
     } catch (error) {
-        console.error('[loginClient] Error:', error);
+        logError('[loginClient] Error:', error);
         return { success: false, message: 'Error del servidor.' };
     }
 }
@@ -47,7 +48,7 @@ export async function loginSupplier(ruc, email, password) {
 
         return { success: false, message: 'Credenciales inválidas para proveedor.' }
     } catch (error) {
-        console.error('Error en loginSupplier:', error)
+        logError('Error en loginSupplier:', error)
         return { success: false, message: 'Error del servidor.' }
     }
 }

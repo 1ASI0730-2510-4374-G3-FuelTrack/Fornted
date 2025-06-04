@@ -20,6 +20,7 @@ import { ref, onMounted } from 'vue'
 import { getApprovedOrders, markAsReleased } from '../services/dispatchService'
 import DispatchHeader from '../components/DispatchHeader.vue'
 import DispatchTable from '../components/DispatchTable.vue'
+import { error as logError } from '@/services/logger'
 
 const orders = ref([])
 const selectedOrderIds = ref([])
@@ -30,7 +31,7 @@ async function fetchOrders() {
     const data = await getApprovedOrders()
     orders.value = data
   } catch (error) {
-    console.error('Error fetching dispatch orders:', error)
+    logError('Error fetching dispatch orders:', error)
   }
 }
 

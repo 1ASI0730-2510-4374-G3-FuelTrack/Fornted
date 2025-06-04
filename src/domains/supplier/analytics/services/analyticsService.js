@@ -2,6 +2,7 @@
 
 import axios from 'axios'
 import API from '@/services/api'
+import { error as logError } from '@/services/logger'
 
 /**
  * Obtiene todas las órdenes marcadas como 'Released'
@@ -12,7 +13,7 @@ export async function getReleasedOrders() {
         const res = await axios.get(`${API}/orders?status=Released`)
         return res.data
     } catch (error) {
-        console.error('Error al obtener órdenes Released:', error)
+        logError('Error al obtener órdenes Released:', error)
         return []
     }
 }

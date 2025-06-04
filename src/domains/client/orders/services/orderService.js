@@ -2,6 +2,7 @@
 
 import axios from 'axios'
 import API from '@/services/api' // ✅ Importar la base común
+import { error as logError } from '@/services/logger'
 
 const API_URL = `${API}/orders`
 
@@ -14,7 +15,7 @@ export async function getOrders() {
         const response = await axios.get(API_URL)
         return response.data
     } catch (error) {
-        console.error('Error al obtener órdenes:', error)
+        logError('Error al obtener órdenes:', error)
         return []
     }
 }
@@ -29,7 +30,7 @@ export async function createOrder(order) {
         const res = await axios.post(API_URL, order)
         return res.data
     } catch (error) {
-        console.error('Error creando orden:', error)
+        logError('Error creando orden:', error)
         throw error
     }
 }
