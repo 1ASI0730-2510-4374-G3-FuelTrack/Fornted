@@ -31,23 +31,32 @@
       </div>
 
       <!-- Pagos -->
-      <div
-          v-for="(payment, paymentIndex) in payments[detailIndex] || []"
-          :key="paymentIndex"
-          class="payment-form"
-      >
-        <div class="field">
-          <label><i class="ph ph-bank"></i> Cuenta Bancaria</label>
-          <select
-              :value="payment.account"
-              @input="e => updatePayment(detailIndex, paymentIndex, 'account', e.target.value)"
-          >
-            <option value="">Seleccione banco</option>
-            <option value="BCP">BCP</option>
-            <option value="BBVA">BBVA</option>
-            <option value="Interbank">Interbank</option>
-          </select>
-        </div>
+      <TransitionGroup name="fade" tag="div">
+        <div
+            v-for="(payment, paymentIndex) in payments[detailIndex] || []"
+            :key="paymentIndex"
+            class="payment-form"
+        >
+          <div class="field">
+            <label><i class="ph ph-bank"></i> Cuenta Bancaria</label>
+          <div class="bank-wrapper">
+            <select
+                :value="payment.account"
+                @input="e => updatePayment(detailIndex, paymentIndex, 'account', e.target.value)"
+            >
+              <option value="">Seleccione banco</option>
+              <option value="BCP">BCP</option>
+              <option value="BBVA">BBVA</option>
+              <option value="Interbank">Interbank</option>
+            </select>
+            <img
+                v-if="payment.account"
+                :src="bankLogos[payment.account]"
+                alt="logo banco"
+                class="bank-logo"
+            />
+          </div>
+          </div>
 
         <div class="field">
           <label><i class="ph ph-currency-circle-dollar"></i> Monto</label>
@@ -89,6 +98,7 @@
           </div>
         </div>
       </div>
+      </TransitionGroup>
 
       <!-- Acciones -->
       <button class="add-btn" @click="addPayment(detailIndex)">
@@ -124,6 +134,12 @@ const emit = defineEmits(['update:modelValue'])
 const orderDetails = computed(() => props.modelValue.details || [])
 const payments = computed(() => props.modelValue.payments || [])
 
+const bankLogos = {
+  BCP: '/img/banks/bcp.png',
+  BBVA: '/img/banks/bbva.png',
+  Interbank: '/img/banks/interbank.png'
+}
+
 function addPayment(detailIndex) {
   const updated = [...payments.value]
   if (!updated[detailIndex]) updated[detailIndex] = []
@@ -153,12 +169,21 @@ function removePayment(detailIndex, paymentIndex) {
   })
 }
 
+function generateOpNumber() {
+  return 'OP' + Math.random().toString(36).slice(2, 10).toUpperCase()
+}
+
 function updatePayment(detailIndex, paymentIndex, field, value) {
   const updated = [...payments.value]
   updated[detailIndex] = [...(updated[detailIndex] || [])]
   updated[detailIndex][paymentIndex] = {
     ...updated[detailIndex][paymentIndex],
     [field]: value
+  }
+
+  const p = updated[detailIndex][paymentIndex]
+  if (!p.operationNumber && p.account && p.amount > 0 && p.date) {
+    p.operationNumber = generateOpNumber()
   }
 
   emit('update:modelValue', {
@@ -273,6 +298,19 @@ function updatePayment(detailIndex, paymentIndex, field, value) {
   color: #dc2626;
 }
 
+.bank-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.bank-logo {
+  width: 28px;
+  height: 18px;
+  object-fit: contain;
+  margin-left: 0.5rem;
+}
+
 .add-btn {
   display: inline-flex;
   align-items: center;
@@ -290,6 +328,17 @@ function updatePayment(detailIndex, paymentIndex, field, value) {
 
 .add-btn:hover {
   background-color: #16a34a;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
 }
 
 .total-amount {
