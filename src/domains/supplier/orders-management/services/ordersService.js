@@ -2,6 +2,7 @@
 
 import axios from 'axios'
 import API from '@/services/api'
+import { error as logError } from '@/services/logger'
 
 const API_URL = `${API}/orders`
 
@@ -23,7 +24,7 @@ export async function getOrders() {
             products: order.products || []
         }))
     } catch (error) {
-        console.error('Error al obtener órdenes:', error)
+        logError('Error al obtener órdenes:', error)
         return []
     }
 }
@@ -65,7 +66,7 @@ export async function getOrdersWithStatusCount() {
             statuses: uniqueStatuses
         }
     } catch (error) {
-        console.error('Error al obtener órdenes:', error)
+        logError('Error al obtener órdenes:', error)
         return { orders: [], statuses: [] }
     }
 }

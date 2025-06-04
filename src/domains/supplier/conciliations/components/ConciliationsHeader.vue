@@ -71,6 +71,7 @@
 <script setup>
 import { ref } from 'vue'
 import LoadDocumentModal from './LoadDocumentModal.vue'
+import { log } from '@/services/logger'
 
 const props = defineProps({
   totalOrders: Number,
@@ -91,7 +92,7 @@ function closeModal() {
 }
 
 function handleSubmit(files) {
-  console.log('Archivos cargados:', files)
+  log('Archivos cargados:', files)
   closeModal()
 }
 

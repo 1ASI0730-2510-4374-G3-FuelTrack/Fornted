@@ -3,6 +3,7 @@
 import axios from 'axios'
 import API from '@/services/api'
 import ConciliationOrder from '../models/ConciliationOrder'
+import { log, error as logError } from '@/services/logger'
 
 const ORDERS_URL = `${API}/orders`
 
@@ -15,7 +16,7 @@ export async function getConciliations() {
         const response = await axios.get(ORDERS_URL)
         return response.data.map(order => new ConciliationOrder(order))
     } catch (error) {
-        console.error('[ConciliationService] Error al obtener órdenes:', error.message)
+        logError('[ConciliationService] Error al obtener órdenes:', error.message)
         return []
     }
 }
@@ -27,7 +28,7 @@ export async function getConciliations() {
  */
 export async function approveOrder(orderId) {
     if (!orderId) {
-        console.warn('[ConciliationService] orderId inválido')
+        log('[ConciliationService] orderId inválido')
         return
     }
 
@@ -38,7 +39,7 @@ export async function approveOrder(orderId) {
         })
         return response.data
     } catch (error) {
-        console.error(`[ConciliationService] Error al aprobar la orden ${orderId}:`, error.message)
+        logError(`[ConciliationService] Error al aprobar la orden ${orderId}:`, error.message)
         throw error
     }
 }

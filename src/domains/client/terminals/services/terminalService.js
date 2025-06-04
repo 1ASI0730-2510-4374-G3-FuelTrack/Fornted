@@ -2,6 +2,7 @@
 
 import axios from 'axios'
 import API from '@/services/api' // ✅ Importa base centralizada
+import { error as logError } from '@/services/logger'
 
 /**
  * Obtiene la lista de terminales disponibles
@@ -12,7 +13,7 @@ export async function getTerminals() {
         const response = await axios.get(`${API}/terminals`)
         return response.data
     } catch (error) {
-        console.error('Error al obtener terminales:', error)
+        logError('Error al obtener terminales:', error)
         return []
     }
 }
@@ -26,7 +27,7 @@ export async function getOrders() {
         const response = await axios.get(`${API}/orders`)
         return response.data
     } catch (error) {
-        console.error('Error al obtener órdenes:', error)
+        logError('Error al obtener órdenes:', error)
         return []
     }
 }
@@ -40,7 +41,7 @@ export async function getTrucks() {
         const response = await axios.get(`${API}/trucks`)
         return response.data
     } catch (error) {
-        console.error('Error al obtener camiones:', error)
+        logError('Error al obtener camiones:', error)
         return []
     }
 }

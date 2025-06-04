@@ -38,6 +38,7 @@ import StepOrderDetails from './StepOrderDetails.vue'
 import StepPayments from './StepPayments.vue'
 import StepConfirmOrder from './StepConfirmOrder.vue'
 import { useOrdersStore } from '../../store/useOrdersStore'
+import { error as logError } from '@/services/logger'
 const ordersStore = useOrdersStore()
 
 const emit = defineEmits(['close'])
@@ -117,7 +118,7 @@ async function confirmOrder() {
 
     emit('close')
   } catch (err) {
-    console.error('❌ Detalle del error en confirmOrder:', err.message, err.response?.data)
+    logError('❌ Detalle del error en confirmOrder:', err.message, err.response?.data)
   }
 
 }

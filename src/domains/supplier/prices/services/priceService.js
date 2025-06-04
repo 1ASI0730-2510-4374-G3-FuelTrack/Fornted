@@ -2,6 +2,7 @@
 
 import axios from 'axios'
 import API from '@/services/api'
+import { error as logError } from '@/services/logger'
 
 const API_URL = API
 
@@ -27,7 +28,7 @@ export async function getProviderFuels(ruc) {
         // Filtrar solo los que ofrece este proveedor
         return allFuels.filter(f => fuelTypes.includes(f.type))
     } catch (error) {
-        console.error('❌ Error getting provider fuels:', error)
+        logError('❌ Error getting provider fuels:', error)
         return []
     }
 }
@@ -51,7 +52,7 @@ export async function updateFuelPrice(fuelId, newPrice) {
 
         return res.data
     } catch (error) {
-        console.error('❌ Error updating fuel price:', error)
+        logError('❌ Error updating fuel price:', error)
         return false
     }
 }

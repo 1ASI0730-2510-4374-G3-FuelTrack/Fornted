@@ -2,6 +2,7 @@
 
 import axios from 'axios'
 import API from '@/services/api'
+import { log, error as logError } from '@/services/logger'
 
 // Obtener órdenes aprobadas
 export async function getApprovedOrders() {
@@ -9,7 +10,7 @@ export async function getApprovedOrders() {
         const res = await axios.get(`${API}/orders?status=Approved`)
         return res.data
     } catch (error) {
-        console.error('Error al obtener órdenes aprobadas:', error)
+        logError('Error al obtener órdenes aprobadas:', error)
         return []
     }
 }
@@ -20,7 +21,7 @@ export async function getTrucks() {
         const res = await axios.get(`${API}/trucks`)
         return res.data
     } catch (error) {
-        console.error('Error al obtener camiones:', error)
+        logError('Error al obtener camiones:', error)
         return []
     }
 }
@@ -31,7 +32,7 @@ export async function getDrivers() {
         const res = await axios.get(`${API}/drivers`)
         return res.data
     } catch (error) {
-        console.error('Error al obtener conductores:', error)
+        logError('Error al obtener conductores:', error)
         return []
     }
 }
@@ -42,7 +43,7 @@ export async function getTanks() {
         const res = await axios.get(`${API}/tanks`)
         return res.data
     } catch (error) {
-        console.error('Error al obtener cisternas:', error)
+        logError('Error al obtener cisternas:', error)
         return []
     }
 }
@@ -55,7 +56,7 @@ export async function markAsReleased(orderId) {
         })
         return res.data
     } catch (error) {
-        console.error('Error al marcar orden como Released:', error)
+        logError('Error al marcar orden como Released:', error)
         throw error
     }
 }
@@ -63,15 +64,15 @@ export async function markAsReleased(orderId) {
 // Asignar transporte a una orden
 export async function assignTransportToOrder(orderId, transport) {
     try {
-        console.log('>>> dispatchService.assignTransportToOrder payload:', orderId, transport)
+        log('>>> dispatchService.assignTransportToOrder payload:', orderId, transport)
         const res = await axios.patch(`${API}/orders/${orderId}`, {
             status: 'Released',
             transport: transport
         })
-        console.log('<<< Response assignTransportToOrder:', res.data)
+        log('<<< Response assignTransportToOrder:', res.data)
         return res.data
     } catch (error) {
-        console.error('Error al asignar transporte a la orden:', error.response ?? error)
+        logError('Error al asignar transporte a la orden:', error.response ?? error)
         throw error
     }
 }
