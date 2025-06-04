@@ -37,7 +37,8 @@ import ProgressStepper from './ProgressStepper.vue'
 import StepOrderDetails from './StepOrderDetails.vue'
 import StepPayments from './StepPayments.vue'
 import StepConfirmOrder from './StepConfirmOrder.vue'
-import { createOrder } from '@/domains/client/orders/services/orderService.js'
+import { useOrdersStore } from '../../store/useOrdersStore'
+const ordersStore = useOrdersStore()
 
 const emit = defineEmits(['close'])
 
@@ -103,7 +104,7 @@ async function confirmOrder() {
       }
     })
 
-    await createOrder({
+    await ordersStore.addOrder({
       id: Date.now(),
       created: new Date().toISOString().split('T')[0],
       user: formData.value.fullName,
@@ -114,11 +115,9 @@ async function confirmOrder() {
       products: enrichedProducts
     })
 
-    alert('✅ Orden creada exitosamente.')
-    window.location.reload()
+    emit('close')
   } catch (err) {
     console.error('❌ Detalle del error en confirmOrder:', err.message, err.response?.data)
-    alert('❌ Hubo un error al crear la orden.')
   }
 
 }
