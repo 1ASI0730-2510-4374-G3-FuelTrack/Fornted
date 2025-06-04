@@ -145,7 +145,7 @@ function calcularTotal(details) {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.35);
+  background-color: rgba(15, 23, 42, 0.55);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -153,14 +153,14 @@ function calcularTotal(details) {
 }
 
 .modal-content {
-  background-color: white;
+  background-color: #ffffff;
   width: 90%;
   max-width: 860px;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
   overflow: hidden;
 }
 
@@ -171,6 +171,7 @@ function calcularTotal(details) {
   justify-content: space-between;
   align-items: center;
   flex-shrink: 0;
+  background-color: #f9fafb;
 }
 
 .modal-body {
@@ -192,8 +193,12 @@ function calcularTotal(details) {
   background: none;
   border: none;
   font-size: 1.3rem;
-  color: #64748b;
+  color: #475569;
   cursor: pointer;
+  transition: color 0.2s ease;
+}
+.close-btn:hover {
+  color: #1e293b;
 }
 
 .btn {
