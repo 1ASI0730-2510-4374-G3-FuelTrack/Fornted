@@ -59,12 +59,13 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
+import API_BASE from '@/services/api'
 
 const orders = ref([])
 
 async function fetchReleasedOrders() {
   try {
-    const res = await axios.get('http://localhost:3000/orders?status=Released')
+    const res = await axios.get(`${API_BASE}/orders?status=Released`)
     orders.value = res.data
   } catch (error) {
     console.error('❌ Error fetching released orders:', error)
