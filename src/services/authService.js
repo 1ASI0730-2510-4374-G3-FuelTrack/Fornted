@@ -1,8 +1,9 @@
 // src/domains/shared/services/authService.js
 
-import axios from 'axios';
+import axios from 'axios'
+import API_BASE from './api'
 
-const API_URL = 'http://localhost:3000';
+const API_URL = API_BASE
 
 /**
  * Realiza el login de un cliente a través del email y password.

@@ -34,10 +34,11 @@ import FiltersPanel from '@/domains/client/orders/components/FiltersPanel.vue'
 import OrdersTable from '@/domains/client/orders/components/OrdersTable.vue'
 import PaginationControls from '@/domains/client/orders/components/PaginationControls.vue'
 import CreateOrderModal from '@/domains/client/orders/components/CreateOrderModal/CreateOrderModal.vue'
-import { getOrders } from '@/domains/client/orders/services/orderService.js'
+import { useOrdersStore } from '../store/useOrdersStore'
 
 // Estado reactivo
-const orders = ref([])
+const ordersStore = useOrdersStore()
+const orders = computed(() => ordersStore.orders)
 const currentPage = ref(1)
 const itemsPerPage = ref(13)
 const showModal = ref(false)
@@ -48,7 +49,7 @@ const endDateFilter = ref('')
 
 // Obtener data al montar
 onMounted(async () => {
-  orders.value = await getOrders()
+  await ordersStore.fetchOrders()
 })
 
 // Aplicar filtros desde panel
@@ -94,7 +95,7 @@ function handleLimitChange(newLimit) {
 
 async function handleModalClose() {
   showModal.value = false
-  orders.value = await getOrders()
+  await ordersStore.fetchOrders()
 }
 </script>
 
