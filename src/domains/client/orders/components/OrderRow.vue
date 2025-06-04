@@ -12,7 +12,7 @@
     <td>{{ order.terminal }}</td>
     <td class="order-id">
       <span>{{ order.orderId }}</span>
-      <i class="ph ph-copy" @click.stop="copyToClipboard(order.orderId)" title="Copiar ID"></i>
+      <i class="ph ph-copy" @click.stop="copyToClipboard(order.orderId)" :title="$t('orders.table.copy_id')"></i>
     </td>
     <td>
         <span :class="['status', order.status.toLowerCase()]">

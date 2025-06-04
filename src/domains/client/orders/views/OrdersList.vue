@@ -1,13 +1,13 @@
 <template>
   <section class="orders-list">
-    <h1>My orders </h1>
+    <h1>{{ $t('orders.my_orders') }} </h1>
 
     <!-- Filtros -->
     <FiltersPanel @filter="applyFilters" />
 
     <!-- Botón crear orden -->
     <button @click="showModal = true" class="create-btn">
-      <i class="ph ph-plus-circle"></i> Crear orden
+      <i class="ph ph-plus-circle"></i> {{ $t('orders.create_order') }}
     </button>
 
     <!-- Tabla de órdenes -->

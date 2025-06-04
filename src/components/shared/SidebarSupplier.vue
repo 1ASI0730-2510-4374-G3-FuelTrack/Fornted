@@ -6,13 +6,13 @@
     </div>
 
     <ul class="sidebar-menu">
-      <li><router-link to="/supplier/admin" class="sidebar-link" active-class="active"><i class="ph ph-user"></i> Admin</router-link></li>
-      <li><router-link to="/supplier/orders" class="sidebar-link" active-class="active"><i class="ph ph-clipboard-text"></i> Orders Management</router-link></li>
-      <li><router-link to="/supplier/conciliations" class="sidebar-link" active-class="active"><i class="ph ph-file-check"></i> Conciliations</router-link></li>
-      <li><router-link to="/supplier/dispatch" class="sidebar-link" active-class="active"><i class="ph ph-truck"></i> Dispatch</router-link></li>
-      <li><router-link to="/supplier/analytics" class="sidebar-link" active-class="active"><i class="ph ph-chart-bar"></i> Analytics</router-link></li>
-      <li><router-link to="/supplier/prices" class="sidebar-link" active-class="active"><i class="ph ph-currency-dollar"></i> Prices</router-link></li>
-      <li><router-link to="/supplier/clients" class="sidebar-link" active-class="active"><i class="ph ph-headphones"></i> Clients</router-link></li>
+      <li><router-link to="/supplier/admin" class="sidebar-link" active-class="active"><i class="ph ph-user"></i> {{ $t('sidebar.supplier.admin') }}</router-link></li>
+      <li><router-link to="/supplier/orders" class="sidebar-link" active-class="active"><i class="ph ph-clipboard-text"></i> {{ $t('sidebar.supplier.orders') }}</router-link></li>
+      <li><router-link to="/supplier/conciliations" class="sidebar-link" active-class="active"><i class="ph ph-file-check"></i> {{ $t('sidebar.supplier.conciliations') }}</router-link></li>
+      <li><router-link to="/supplier/dispatch" class="sidebar-link" active-class="active"><i class="ph ph-truck"></i> {{ $t('sidebar.supplier.dispatch') }}</router-link></li>
+      <li><router-link to="/supplier/analytics" class="sidebar-link" active-class="active"><i class="ph ph-chart-bar"></i> {{ $t('sidebar.supplier.analytics') }}</router-link></li>
+      <li><router-link to="/supplier/prices" class="sidebar-link" active-class="active"><i class="ph ph-currency-dollar"></i> {{ $t('sidebar.supplier.prices') }}</router-link></li>
+      <li><router-link to="/supplier/clients" class="sidebar-link" active-class="active"><i class="ph ph-headphones"></i> {{ $t('sidebar.supplier.clients') }}</router-link></li>
     </ul>
   </aside>
 </template>
