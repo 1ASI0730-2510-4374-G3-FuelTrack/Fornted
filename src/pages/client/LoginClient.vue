@@ -3,7 +3,7 @@
     <div class="login-card">
       <img src="/img/logo.png" alt="FuelTrack Logo" class="logo" />
       <h1 class="title">FuelTrack</h1>
-      <p class="subtitle">Optimize your fuel orders management</p>
+      <p class="subtitle">{{ $t('login.client.subtitle') }}</p>
 
       <!-- Simulación de formulario -->
       <form @submit.prevent="fakeLogin">
@@ -11,22 +11,22 @@
             id="email"
             type="email"
             v-model="email"
-            placeholder="Email Address"
+            :placeholder="$t('common.email')"
             required
         />
         <input
             id="password"
             type="password"
             v-model="password"
-            placeholder="Password"
+            :placeholder="$t('common.password')"
             required
         />
-        <button type="submit" class="login-button">Enter as Client</button>
+        <button type="submit" class="login-button">{{ $t('login.client.submit') }}</button>
       </form>
 
       <p class="register-text">
-        Not a Client?
-        <a href="#" class="register-link">Click Here</a>
+        {{ $t('login.client.not_client') }}
+        <a href="#" class="register-link">{{ $t('common.click_here') }}</a>
       </p>
     </div>
   </div>
@@ -43,7 +43,7 @@ export default {
   },
   methods: {
     fakeLogin() {
-      alert('✅ Logged in as demo client')
+      alert(this.$t('login.demo_client'))
       this.$router.push('/client/orders')
     }
   }

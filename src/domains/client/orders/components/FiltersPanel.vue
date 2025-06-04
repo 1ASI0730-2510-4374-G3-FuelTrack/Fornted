@@ -4,21 +4,21 @@
     <div class="totals">
       <div class="item">
         <strong>{{ totalOrders }}</strong>
-        <span>Total Orders</span>
+        <span>{{ $t('orders.filters.total') }}</span>
       </div>
 
       <div class="divider" />
 
       <div class="item status-badge approved">
         {{ approved }}
-        <span>Approved</span>
+        <span>{{ $t('orders.filters.approved') }}</span>
       </div>
 
       <div class="divider" />
 
       <div class="item status-badge requested">
         {{ requested }}
-        <span>Requested</span>
+        <span>{{ $t('orders.filters.requested') }}</span>
       </div>
 
 
@@ -28,27 +28,27 @@
     <div class="actions">
       <div class="relative">
         <button class="filter-button" @click="toggleDropdown">
-          <i class="ph ph-funnel-simple"></i> Filtros
+          <i class="ph ph-funnel-simple"></i> {{ $t('orders.filters.filters') }}
         </button>
 
         <div v-if="showDropdown" class="dropdown">
-          <label>Estado:</label>
+          <label>{{ $t('orders.filters.state') }}:</label>
           <select v-model="status">
-            <option value="">Todos</option>
-            <option value="Requested">Requested</option>
-            <option value="Approved">Approved</option>
-            <option value="Released">Released</option>
-            <option value="Closed">Closed</option>
+            <option value="">{{ $t('orders.filters.all') }}</option>
+            <option value="Requested">{{ $t('orders.filters.requested') }}</option>
+            <option value="Approved">{{ $t('orders.filters.approved') }}</option>
+            <option value="Released">{{ $t('orders.filters.released') }}</option>
+            <option value="Closed">{{ $t('orders.filters.closed') }}</option>
           </select>
 
-          <label>Desde:</label>
+          <label>{{ $t('orders.filters.from') }}:</label>
           <input type="date" v-model="startDate" />
 
-          <label>Hasta:</label>
+          <label>{{ $t('orders.filters.to') }}:</label>
           <input type="date" v-model="endDate" />
 
           <button class="apply-btn" @click="applyFilters">
-            <i class="ph ph-check-circle"></i> Aplicar
+            <i class="ph ph-check-circle"></i> {{ $t('orders.filters.apply') }}
           </button>
         </div>
       </div>
@@ -60,11 +60,11 @@
           <i class="ph ph-x" @click="clearFilter('status')"></i>
         </span>
         <span v-if="startDate" class="chip">
-          <i class="ph ph-calendar-blank"></i> Desde {{ startDate }}
+          <i class="ph ph-calendar-blank"></i> {{ $t('orders.filters.from') }} {{ startDate }}
           <i class="ph ph-x" @click="clearFilter('start')"></i>
         </span>
         <span v-if="endDate" class="chip">
-          <i class="ph ph-calendar-blank"></i> Hasta {{ endDate }}
+          <i class="ph ph-calendar-blank"></i> {{ $t('orders.filters.to') }} {{ endDate }}
           <i class="ph ph-x" @click="clearFilter('end')"></i>
         </span>
       </div>

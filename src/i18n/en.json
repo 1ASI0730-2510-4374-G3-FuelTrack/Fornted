@@ -1,1 +1,75 @@
-{}
+{
+  "welcome": {
+    "title": "Welcome to FuelTrack",
+    "subtitle": "Select your user type to continue:",
+    "client_title": "Client",
+    "client_desc": "Companies requesting fuel",
+    "supplier_title": "Supplier",
+    "supplier_desc": "Companies supplying fuel"
+  },
+  "login": {
+    "client": {
+      "subtitle": "Optimize your fuel orders management",
+      "submit": "Enter as Client",
+      "not_client": "Not a Client?"
+    },
+    "supplier": {
+      "subtitle": "Supplier Access Portal",
+      "submit": "Enter as Supplier",
+      "not_supplier": "Not a Supplier?"
+    },
+    "demo_client": "✅ Logged in as demo client",
+    "demo_supplier": "✅ Logged in as demo supplier"
+  },
+  "sidebar": {
+    "client": {
+      "admin": "Admin",
+      "orders": "Orders",
+      "analytics": "Analytics",
+      "terminals": "Terminals",
+      "provider": "Provider",
+      "workflows": "Workflows"
+    },
+    "supplier": {
+      "admin": "Admin",
+      "orders": "Orders Management",
+      "conciliations": "Conciliations",
+      "dispatch": "Dispatch",
+      "analytics": "Analytics",
+      "prices": "Prices",
+      "clients": "Clients"
+    }
+  },
+  "orders": {
+    "my_orders": "My orders",
+    "create_order": "Create order",
+    "filters": {
+      "total": "Total Orders",
+      "approved": "Approved",
+      "requested": "Requested",
+      "filters": "Filters",
+      "state": "Status",
+      "all": "All",
+      "released": "Released",
+      "closed": "Closed",
+      "from": "From",
+      "to": "To",
+      "apply": "Apply"
+    },
+    "table": {
+      "created": "Created",
+      "user": "User",
+      "amount": "Amount",
+      "terminal": "Terminal",
+      "order_id": "Order ID",
+      "status": "Status",
+      "copy_id": "Copy ID"
+    }
+  },
+  "common": {
+    "email": "Email Address",
+    "password": "Password",
+    "ruc": "RUC",
+    "click_here": "Click Here"
+  }
+}

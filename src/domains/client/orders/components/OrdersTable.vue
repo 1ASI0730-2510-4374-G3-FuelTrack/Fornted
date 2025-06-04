@@ -2,12 +2,12 @@
   <table class="orders-table">
     <thead>
     <tr>
-      <th>Creado</th>
-      <th>Usuario</th>
-      <th>Monto</th>
-      <th>Terminal</th>
-      <th>ID de Orden</th>
-      <th>Estado</th>
+      <th>{{ $t('orders.table.created') }}</th>
+      <th>{{ $t('orders.table.user') }}</th>
+      <th>{{ $t('orders.table.amount') }}</th>
+      <th>{{ $t('orders.table.terminal') }}</th>
+      <th>{{ $t('orders.table.order_id') }}</th>
+      <th>{{ $t('orders.table.status') }}</th>
     </tr>
     </thead>
 
