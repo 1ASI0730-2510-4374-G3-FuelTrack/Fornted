@@ -1,45 +1,35 @@
 <template>
-  <div class="stepper">
-    <div
-        v-for="(step, index) in steps"
-        :key="index"
-        class="step"
-    >
-      <div
-          class="circle"
+  <nav aria-label="Pasos del proceso" class="stepper">
+    <ol class="step-list">
+      <li
+          v-for="(step, index) in steps"
+          :key="index"
+          class="step-item"
           :class="{
           active: currentStep === index + 1,
           completed: currentStep > index + 1
         }"
-          :title="step.label"
+          :aria-current="currentStep === index + 1 ? 'step' : null"
       >
-        <Transition name="fade">
-          <i
-              v-if="currentStep > index + 1"
-              class="ph ph-check-bold"
-              key="check"
-          />
-          <i
-              v-else
-              :class="step.icon"
-              key="icon"
-          />
-        </Transition>
-      </div>
-
-      <span
-          class="label"
-          :class="{
-          'active-text': currentStep === index + 1,
-          'completed-text': currentStep > index + 1
-        }"
-      >
-        {{ step.label }}
-      </span>
-
-      <div v-if="index < steps.length - 1" class="line" />
-    </div>
-  </div>
+        <div class="circle">
+          <Transition name="fade">
+            <i
+                v-if="currentStep > index + 1"
+                class="ph ph-check-bold"
+                key="check"
+            />
+            <i
+                v-else
+                :class="step.icon"
+                key="icon"
+            />
+          </Transition>
+        </div>
+        <span class="step-label">{{ step.label }}</span>
+        <div v-if="index < steps.length - 1" class="line" />
+      </li>
+    </ol>
+  </nav>
 </template>
 
 <script setup lang="ts">
@@ -57,60 +47,69 @@ const steps = [
 <style scoped>
 .stepper {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 1.5rem;
-  margin-bottom: 1.5rem;
-  position: relative;
+  justify-content: center;
+  background-color: #f8fafc;
+  padding: 1.25rem 1rem;
+  border-bottom: 1px solid #e2e8f0;
 }
 
-.step {
+.step-list {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  width: 100%;
+  max-width: 760px;
+}
+
+.step-item {
   display: flex;
   flex-direction: column;
   align-items: center;
   flex: 1;
   position: relative;
-  min-width: 80px;
+  text-align: center;
 }
 
 .circle {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   background-color: #cbd5e1;
-  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.1rem;
-  font-weight: bold;
-  transition: all 0.3s ease;
-  z-index: 1;
+  font-size: 1.2rem;
+  color: white;
+  transition: all 0.25s ease-in-out;
+  z-index: 2;
 }
 
-.circle.active {
+.step-item.active .circle {
   background-color: #0ea5e9;
   transform: scale(1.1);
 }
 
-.circle.completed {
+.step-item.completed .circle {
   background-color: #10b981;
 }
 
-.label {
+.step-label {
   margin-top: 0.5rem;
-  font-size: 0.82rem;
+  font-size: 0.85rem;
+  font-weight: 500;
   color: #64748b;
-  text-align: center;
   transition: color 0.3s;
 }
 
-.label.active-text {
+.step-item.active .step-label {
   color: #0ea5e9;
   font-weight: 600;
 }
 
-.label.completed-text {
+.step-item.completed .step-label {
   color: #10b981;
 }
 
@@ -118,18 +117,21 @@ const steps = [
   position: absolute;
   top: 20px;
   left: 50%;
-  right: -50%;
+  width: 100%;
   height: 2px;
   background-color: #cbd5e1;
-  z-index: 0;
+  z-index: 1;
+  transform: translateX(50%);
 }
 
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-.fade-enter-from, .fade-leave-to {
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
-  transform: scale(0.8);
+  transform: scale(0.85);
 }
 </style>

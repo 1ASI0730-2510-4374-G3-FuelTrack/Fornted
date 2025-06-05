@@ -1,107 +1,108 @@
 <template>
   <div class="step-order-details">
     <h2 class="section-title">
-      <i class="ph ph-clipboard-text"></i>
-      Order Information
+      Información de la Orden
     </h2>
 
-    <!-- Información general -->
+    <!-- Información General -->
     <div class="form-grid">
       <div class="form-field">
-        <label><i class="ph ph-user"></i> Responsible</label>
+        <label>Responsable</label>
         <input
             v-model="responsible"
             type="text"
-            placeholder="Full name"
+            placeholder="Nombre completo"
             :class="{ invalid: !responsible && submitted }"
         />
-        <span v-if="!responsible && submitted" class="error">Required</span>
+        <span v-if="!responsible && submitted" class="error">Este campo es obligatorio</span>
       </div>
 
       <div class="form-field">
-        <label><i class="ph ph-map-pin"></i> Dispatch Terminal</label>
+        <label>Terminal de Despacho</label>
         <select
             v-model="terminal"
             :class="{ invalid: !terminal && submitted }"
         >
-          <option disabled value="">Select terminal</option>
+          <option disabled value="">Seleccione una terminal</option>
           <option v-for="t in terminals" :key="t" :value="t">{{ t }}</option>
         </select>
-        <span v-if="!terminal && submitted" class="error">Required</span>
+        <span v-if="!terminal && submitted" class="error">Este campo es obligatorio</span>
       </div>
     </div>
 
-    <!-- Detalles -->
-    <h3 class="detail-title">Order Details</h3>
+    <!-- Detalles de la Orden -->
+    <h3 class="detail-title">Detalles de la Orden</h3>
 
-    <div
-        v-for="(detail, index) in details"
-        :key="index"
-        class="detail-box"
-    >
-      <div class="detail-header">
-        <strong>Detail #{{ index + 1 }}</strong>
-        <button
-            v-if="details.length > 1"
-            class="remove-btn"
-            @click="removeDetail(index)"
-        >
-          <i class="ph ph-trash"></i>
-        </button>
-      </div>
-
-      <div class="form-grid">
-        <div class="form-field">
-          <label><i class="ph ph-fuel"></i> Fuel</label>
-          <select
-              v-model="detail.product"
-              @change="updateTotalPrice(detail)"
-              :class="{ invalid: !detail.product && submitted }"
+    <transition-group name="fade" tag="div">
+      <div
+          v-for="(detail, index) in details"
+          :key="index"
+          class="detail-box"
+      >
+        <div class="detail-header">
+          <strong>Detalle #{{ index + 1 }}</strong>
+          <button
+              v-if="details.length > 1"
+              class="remove-btn"
+              @click="removeDetail(index)"
           >
-            <option disabled value="">Select fuel</option>
-            <option
-                v-for="f in fuels"
-                :key="f.type"
-                :value="f.type"
+            ✕
+          </button>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Combustible</label>
+            <select
+                v-model="detail.product"
+                @change="updateTotalPrice(detail)"
+                :class="{ invalid: !detail.product && submitted }"
             >
-              {{ f.type }}
-            </option>
-          </select>
-          <span v-if="!detail.product && submitted" class="error">Required</span>
+              <option disabled value="">Seleccione un combustible</option>
+              <option
+                  v-for="f in fuels"
+                  :key="f.type"
+                  :value="f.type"
+              >
+                {{ f.type }}
+              </option>
+            </select>
+            <span v-if="!detail.product && submitted" class="error">Este campo es obligatorio</span>
+          </div>
+
+          <div class="form-field">
+            <label>Cantidad</label>
+            <input
+                type="number"
+                min="1"
+                v-model.number="detail.quantity"
+                @input="updateTotalPrice(detail)"
+                placeholder="Ingrese la cantidad"
+                :class="{ invalid: (!detail.quantity || detail.quantity <= 0) && submitted }"
+            />
+            <span v-if="(!detail.quantity || detail.quantity <= 0) && submitted" class="error">Este campo es obligatorio</span>
+          </div>
+
+          <div class="form-field">
+            <label>Total</label>
+            <input type="text" :value="detail.totalPrice" disabled />
+          </div>
         </div>
 
-        <div class="form-field">
-          <label><i class="ph ph-gas-pump"></i> Amount</label>
-          <input
-              type="number"
-              min="1"
-              v-model.number="detail.quantity"
-              @input="updateTotalPrice(detail)"
-              placeholder="Enter amount"
-              :class="{ invalid: (!detail.quantity || detail.quantity <= 0) && submitted }"
+        <div class="form-field full-width">
+          <label>Nota (Opcional)</label>
+          <textarea
+              v-model="detail.note"
+              rows="2"
+              placeholder="Escriba una nota"
           />
-          <span v-if="(!detail.quantity || detail.quantity <= 0) && submitted" class="error">Required</span>
-        </div>
-
-        <div class="form-field">
-          <label><i class="ph ph-currency-dollar"></i> Total</label>
-          <input type="text" :value="detail.totalPrice" disabled />
         </div>
       </div>
+    </transition-group>
 
-      <div class="form-field full-width">
-        <label><i class="ph ph-note-pencil"></i> Note (Optional)</label>
-        <textarea
-            v-model="detail.note"
-            rows="2"
-            placeholder="Write note"
-        />
-      </div>
-    </div>
-
-    <!-- Botón añadir -->
+    <!-- Botón Añadir Detalle -->
     <button class="add-btn" @click="addDetail">
-      <i class="ph ph-plus-circle"></i> Add Detail
+      + Añadir Detalle
     </button>
   </div>
 </template>
@@ -175,36 +176,32 @@ watch([responsible, terminal, details], () => {
 }
 
 .section-title {
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
   margin-bottom: 1.5rem;
-  color: #0f172a;
+  color: #1f2937;
 }
 
 .detail-title {
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: 600;
   margin: 2rem 0 1rem;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e5e7eb;
   padding-bottom: 0.5rem;
-  color: #1e293b;
+  color: #1f2937;
 }
 
 .detail-box {
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 1rem 1.25rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1rem;
   margin-bottom: 1.25rem;
-  background-color: #f8fafc;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  background-color: #f9fafb;
   transition: box-shadow 0.2s ease;
 }
 
 .detail-box:hover {
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
 .detail-header {
@@ -212,7 +209,7 @@ watch([responsible, terminal, details], () => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
-  color: #0f172a;
+  color: #1f2937;
 }
 
 .remove-btn {
@@ -244,18 +241,15 @@ label {
   font-weight: 500;
   font-size: 0.85rem;
   margin-bottom: 0.25rem;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  color: #475569;
+  color: #4b5563;
 }
 
 input,
 select,
 textarea {
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  padding: 0.55rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
   font-size: 0.875rem;
   background-color: #ffffff;
   transition: border-color 0.2s, box-shadow 0.2s;
@@ -296,13 +290,10 @@ select.invalid {
   background-color: #3b82f6;
   color: white;
   padding: 0.6rem 1.25rem;
-  border-radius: 8px;
+  border-radius: 6px;
   font-size: 0.85rem;
   border: none;
   cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
   transition: background 0.2s ease;
 }
 
@@ -314,5 +305,12 @@ select.invalid {
   outline: none;
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
 }
-</style>
 
+/* Animaciones */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+</style>
