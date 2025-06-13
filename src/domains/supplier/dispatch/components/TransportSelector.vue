@@ -1,30 +1,29 @@
 <template>
   <div class="transport-selector">
     <div class="selector-row">
-      <select v-model="selectedTruckId">
-        <option disabled value="">select truck</option>
-        <option
-            v-for="truck in trucks"
-            :key="truck.id"
-            :value="truck.id"
-        >
-          {{ truck.plate }} — {{ truck.driver }}
-        </option>
-      </select>
+      <Dropdown
+          v-model="selectedTruckId"
+          :options="trucks"
+          optionLabel="label"
+          optionValue="id"
+          placeholder="Select truck"
+          class="dropdown-dark"
+          showClear
+      />
 
-      <input
-          type="text"
+      <InputText
           :value="selectedTruck?.driver || ''"
-          placeholder="select driver"
+          placeholder="Select driver"
           readonly
+          class="input-dark"
           :disabled="!selectedTruck"
       />
 
-      <input
-          type="text"
+      <InputText
           :value="selectedTruck ? `${selectedTruck.quantity} gal` : ''"
-          placeholder="select tank"
+          placeholder="Select tank"
           readonly
+          class="input-dark"
           :disabled="!selectedTruck"
       />
     </div>
@@ -32,7 +31,9 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { ref, computed, watch } from 'vue'
+import Dropdown from 'primevue/dropdown'
+import InputText from 'primevue/inputtext'
 
 const props = defineProps({
   trucks: {
@@ -43,10 +44,17 @@ const props = defineProps({
 
 const emit = defineEmits(['update:transport'])
 
-const selectedTruckId = ref('')
+const selectedTruckId = ref(null)
 
 const selectedTruck = computed(() =>
     props.trucks.find(t => t.id === selectedTruckId.value)
+)
+
+const trucks = computed(() =>
+    props.trucks.map(t => ({
+      ...t,
+      label: `${t.plate} — ${t.driver}`
+    }))
 )
 
 watch(selectedTruck, (truck) => {
@@ -75,30 +83,34 @@ watch(selectedTruck, (truck) => {
   align-items: center;
 }
 
-select,
-input {
-  flex: 1;
+:deep(.dropdown-dark .p-dropdown) {
   background-color: #1e2e4a;
   border: 1px solid #334155;
-  border-radius: 6px;
-  padding: 0.45rem 0.6rem;
   color: #ffffff;
   font-size: 0.85rem;
 }
 
-select:focus,
-input:focus {
-  outline: none;
-  border-color: #4ade80;
+:deep(.dropdown-dark .p-dropdown-label) {
+  color: #ffffff;
 }
 
-input[readonly] {
+.input-dark {
+  flex: 1;
+  background-color: #1e2e4a;
+  border: 1px solid #334155;
+  color: #ffffff;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  padding: 0.45rem 0.6rem;
+}
+
+.input-dark[readonly] {
   background-color: #1e2e4a;
   cursor: not-allowed;
   color: #cbd5e1;
 }
 
-input:disabled {
+.input-dark:disabled {
   opacity: 0.5;
 }
 </style>

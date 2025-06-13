@@ -1,127 +1,111 @@
 <template>
-  <div class="modal-overlay" @click.self="close">
-    <div class="modal">
-      <h2 class="modal-title">Load Bank Statement</h2>
+  <Dialog
+      v-model:visible="visible"
+      modal
+      header="Load Bank Statement"
+      class="custom-modal"
+      :closable="false"
+  >
+    <!-- Zona de arrastre -->
+    <div class="dropzone" @click="fileInput.click()" @dragover.prevent @drop.prevent="handleDrop">
+      <i class="ph ph-cloud-arrow-up icon" />
+      <p class="drop-text">Click or drag files here</p>
+      <small class="format-hint">PDF, XLSX and XLS formats, up to 50MB</small>
+      <input
+          type="file"
+          ref="fileInput"
+          accept=".pdf,.xls,.xlsx"
+          multiple
+          hidden
+          @change="handleFileChange"
+      />
+    </div>
 
-      <!-- Zona de drop / selección -->
-      <div
-          class="dropzone"
-          @dragover.prevent
-          @drop.prevent="handleDrop"
-          @click="fileInput.click()"
-      >
-        <i class="ph ph-cloud-arrow-up icon" />
-        <p class="drop-text">Click or drag files here</p>
-        <small class="format-hint">PDF, XLSX and XLS formats, up to 50MB</small>
-        <input
-            type="file"
-            accept=".pdf,.xls,.xlsx"
-            multiple
-            ref="fileInput"
-            @change="handleFileChange"
-            hidden
-        />
-      </div>
-
-      <!-- Lista de archivos -->
-      <div v-if="files.length" class="file-list">
-        <div v-for="(file, index) in files" :key="index" class="file-card">
-          <i class="ph ph-file-pdf file-icon" />
-          <div class="file-info">
-            <strong class="file-name">{{ file.name }}</strong>
-            <small class="file-size">{{ formatSize(file.size) }}</small>
-          </div>
-          <button class="remove-btn" @click="removeFile(index)">
-            <i class="ph ph-x" />
-          </button>
+    <!-- Lista de archivos -->
+    <div v-if="files.length" class="file-list">
+      <div v-for="(file, index) in files" :key="index" class="file-card">
+        <i class="ph ph-file-pdf file-icon" />
+        <div class="file-info">
+          <strong class="file-name">{{ file.name }}</strong>
+          <small class="file-size">{{ formatSize(file.size) }}</small>
         </div>
-      </div>
-
-      <!-- Acciones -->
-      <div class="actions">
-        <button class="btn load" @click="loadFiles">Load</button>
-        <button class="btn cancel" @click="close">Cancel</button>
+        <Button icon="pi pi-times" text rounded @click="removeFile(index)" />
       </div>
     </div>
-  </div>
+
+    <!-- Acciones -->
+    <div class="actions">
+      <Button
+          label="Load"
+          icon="pi pi-upload"
+          class="p-button-success"
+          :disabled="!files.length"
+          @click="loadFiles"
+      />
+      <Button
+          label="Cancel"
+          icon="pi pi-times"
+          class="p-button-danger"
+          @click="close"
+      />
+    </div>
+  </Dialog>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+import Dialog from 'primevue/dialog'
+import Button from 'primevue/button'
 
-const emit = defineEmits(['close', 'submit'])
+// 👇 Control externo con v-if
+const props = defineProps({
+  modelValue: Boolean
+})
 
+const emit = defineEmits(['update:modelValue', 'submit'])
+
+const visible = ref(props.modelValue)
 const files = ref([])
 const fileInput = ref(null)
+
+watch(() => props.modelValue, val => visible.value = val)
+watch(visible, val => emit('update:modelValue', val))
 
 function handleDrop(e) {
   files.value = [...files.value, ...Array.from(e.dataTransfer.files)]
 }
-
 function handleFileChange(e) {
   files.value = [...files.value, ...Array.from(e.target.files)]
 }
-
 function removeFile(index) {
   files.value.splice(index, 1)
 }
-
 function close() {
-  emit('close')
+  visible.value = false
 }
-
 function loadFiles() {
   emit('submit', files.value)
   files.value = []
   close()
 }
-
 function formatSize(bytes) {
   const kb = bytes / 1024
-  return kb < 1024
-      ? `${kb.toFixed(0)} KB`
-      : `${(kb / 1024).toFixed(2)} MB`
+  return kb < 1024 ? `${kb.toFixed(0)} KB` : `${(kb / 1024).toFixed(2)} MB`
 }
 </script>
 
 <style scoped>
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background-color: #0c1f3acc;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  animation: fadeIn 0.3s ease-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.modal {
+:deep(.custom-modal .p-dialog-content) {
   background-color: #1e2e4a;
-  padding: 2rem;
-  border-radius: 14px;
-  width: 480px;
-  max-width: 95%;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.35);
   color: #ffffff;
 }
 
-.modal-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 1.2rem;
+:deep(.custom-modal .p-dialog-header) {
+  background-color: #1e2e4a;
   color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border-bottom: 1px solid #334155;
 }
 
 .dropzone {
@@ -132,6 +116,7 @@ function formatSize(bytes) {
   text-align: center;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  margin-bottom: 1rem;
 }
 
 .dropzone:hover {
@@ -155,11 +140,10 @@ function formatSize(bytes) {
 }
 
 .file-list {
-  margin-top: 1.2rem;
-  margin-bottom: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  margin-bottom: 1.5rem;
 }
 
 .file-card {
@@ -168,12 +152,12 @@ function formatSize(bytes) {
   border-radius: 10px;
   display: flex;
   align-items: center;
+  gap: 0.75rem;
 }
 
 .file-icon {
   font-size: 1.5rem;
   color: #f87171;
-  margin-right: 0.8rem;
 }
 
 .file-info {
@@ -190,43 +174,9 @@ function formatSize(bytes) {
   color: #cbd5e1;
 }
 
-.remove-btn {
-  background: none;
-  border: none;
-  color: #cbd5e1;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
 .actions {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
-  margin-top: 1rem;
-}
-
-.btn {
-  padding: 0.5rem 1.1rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn.load {
-  background-color: #22c55e;
-  color: white;
-}
-
-.btn.cancel {
-  background-color: #ef4444;
-  color: white;
-}
-
-.btn:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
 }
 </style>

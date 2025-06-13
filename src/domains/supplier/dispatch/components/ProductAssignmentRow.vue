@@ -16,14 +16,22 @@
     </div>
 
     <div class="actions">
-      <button class="gear-btn" @click="$emit('openModal', product)">
-        <i class="ph ph-gear"></i>
-      </button>
+      <Button
+          icon="pi pi-cog"
+          severity="warning"
+          outlined
+          rounded
+          aria-label="Configure product"
+          @click="$emit('openModal', product)"
+          class="gear-btn"
+      />
     </div>
   </div>
 </template>
 
 <script setup>
+import Button from 'primevue/button'
+
 const props = defineProps({
   product: {
     type: Object,
@@ -83,16 +91,15 @@ function formatCurrency(value) {
   align-items: center;
 }
 
-.gear-btn {
-  background: none;
+:deep(.gear-btn.p-button) {
   border: none;
+  background-color: transparent;
   color: #facc15;
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: transform 0.2s ease;
+  font-size: 1.1rem;
 }
 
-.gear-btn:hover {
+:deep(.gear-btn.p-button:hover) {
   transform: rotate(20deg);
+  background-color: transparent;
 }
 </style>

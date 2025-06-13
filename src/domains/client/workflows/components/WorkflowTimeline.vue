@@ -1,136 +1,159 @@
 <template>
-  <div class="workflow-timeline">
-    <div
-        v-for="(step, index) in steps"
-        :key="index"
-        class="timeline-step"
-        :class="{ active: index <= currentStep, completed: index < currentStep }"
-        v-motion
-        :initial="{ opacity: 0, x: -30 }"
-        :enter="{ opacity: 1, x: 0, transition: { delay: index * 0.1 } }"
-    >
-      <div class="circle">
-        <i :class="step.icon"></i>
-        <div v-if="index < currentStep" class="checkmark">
-          <i class="ph ph-check"></i>
-        </div>
-      </div>
+  <div class="timeline-card">
+    <h4 class="mb-3 text-lg font-bold text-primary">Seguimiento del Estado</h4>
 
-      <div class="info">
-        <h4>{{ step.label }}</h4>
-        <p :class="{ done: index <= currentStep }">
-          {{ index < currentStep ? 'Completado' : index === currentStep ? 'En proceso' : 'Pendiente' }}
-        </p>
-      </div>
-    </div>
-    <div class="progress-bar">
-      <div class="progress" :style="{ width: progressPercent + '%' }"></div>
-    </div>
+    <Timeline :value="steps" layout="vertical" class="custom-timeline">
+      <!-- Ícono de estado -->
+      <template #marker="slotProps">
+        <Tag
+            :value="slotProps.item.label"
+            :severity="slotProps.item.severity"
+            class="status-tag"
+        />
+      </template>
+
+      <!-- Contenido del paso -->
+      <template #content="slotProps">
+        <div class="timeline-entry fade-in">
+          <div class="flex align-items-center gap-2 mb-1">
+            <i :class="['pi', slotProps.item.icon]" class="text-xl text-primary"></i>
+            <p class="text-base font-semibold text-800 m-0">{{ slotProps.item.label }}</p>
+          </div>
+          <p class="text-sm text-color-secondary m-0">{{ slotProps.item.description }}</p>
+          <small class="text-xs text-color-secondary">{{ slotProps.item.date }}</small>
+        </div>
+      </template>
+    </Timeline>
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue'
-import { useMotion } from '@vueuse/motion'
+import Timeline from 'primevue/timeline'
+import Tag from 'primevue/tag'
 
-const steps = [
-  { label: 'Creado', icon: 'ph ph-pencil' },
-  { label: 'Aprobado', icon: 'ph ph-check-circle' },
-  { label: 'En ruta', icon: 'ph ph-truck' },
-  { label: 'Entregado', icon: 'ph ph-flag-checkered' }
-]
+const props = defineProps({
+  status: {
+    type: String,
+    required: true
+  },
+  createdAt: {
+    type: String,
+    default: () => new Date().toISOString()
+  }
+})
 
-// Simulación: hasta cuál paso llegó
-const currentStep = 2
+const steps = computed(() => {
+  const baseSteps = [
+    {
+      status: 'Requested',
+      label: 'Solicitado',
+      description: 'El cliente ha enviado la orden.',
+      date: formatDate(props.createdAt),
+      severity: 'info',
+      icon: 'pi-clock'
+    },
+    {
+      status: 'Approved',
+      label: 'Aprobado',
+      description: 'La orden fue aprobada por el proveedor.',
+      severity: 'success',
+      icon: 'pi-check-circle'
+    },
+    {
+      status: 'Released',
+      label: 'Liberado',
+      description: 'La orden ha sido liberada para el despacho.',
+      severity: 'primary',
+      icon: 'pi-send'
+    },
+    {
+      status: 'Delivered',
+      label: 'Entregado',
+      description: 'La orden fue entregada al cliente.',
+      severity: 'success',
+      icon: 'pi-box'
+    }
+  ]
 
-const progressPercent = computed(() => ((currentStep + 1) / steps.length) * 100)
+  const index = baseSteps.findIndex(s => s.status === props.status)
+  return baseSteps.slice(0, index + 1)
+})
+
+function formatDate(dateStr) {
+  const date = new Date(dateStr)
+  return date.toLocaleString('es-PE', {
+    weekday: 'short',
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+}
 </script>
 
 <style scoped>
-.workflow-timeline {
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-  padding: 1rem 0;
+.timeline-card {
+  background: var(--surface-card);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: var(--card-shadow);
+  margin-top: 1.5rem;
 }
 
-.timeline-step {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  opacity: 0.5;
-  transition: all 0.3s ease;
-  transform: scale(0.95);
+.timeline-entry {
+  padding: 0.75rem;
+  margin-left: 0.5rem;
+  border-left: 3px solid var(--primary-color);
+  background-color: var(--surface-ground);
+  border-radius: 0.5rem;
 }
 
-.timeline-step.active {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.timeline-step.completed .circle {
-  background-color: #22c55e;
-  color: white;
-}
-
-.circle {
-  position: relative;
-  width: 40px;
-  height: 40px;
-  border-radius: 9999px;
-  background-color: #e2e8f0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #0ea5e9;
-  font-size: 1.2rem;
-  transition: all 0.3s ease;
-}
-
-.checkmark {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  background-color: white;
-  color: #22c55e;
-  border-radius: 50%;
-  font-size: 0.7rem;
-  width: 16px;
-  height: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-}
-
-.info h4 {
-  font-size: 0.9rem;
-  margin: 0;
-  color: #0f172a;
-}
-
-.info p {
-  font-size: 0.75rem;
-  margin: 0;
-  color: #64748b;
-}
-
-.info p.done {
-  color: #22c55e;
+.status-tag {
+  margin-bottom: 0.75rem;
+  min-width: 7rem;
+  text-align: center;
+  font-size: 0.8rem;
   font-weight: 600;
+  padding: 0.4rem 0.75rem;
 }
 
-.progress-bar {
-  height: 6px;
-  background: #e2e8f0;
-  border-radius: 999px;
-  overflow: hidden;
-  margin-top: 1rem;
+.custom-timeline ::v-deep(.p-timeline-event-opposite) {
+  display: none;
 }
 
-.progress {
-  height: 100%;
-  background: linear-gradient(90deg, #0ea5e9, #22c55e);
-  transition: width 0.4s ease;
+.custom-timeline ::v-deep(.p-timeline-event) {
+  margin-bottom: 1.5rem;
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .timeline-card {
+    padding: 1rem;
+  }
+
+  .status-tag {
+    font-size: 0.7rem;
+  }
+
+  .timeline-entry {
+    padding: 0.5rem;
+  }
 }
 </style>
+

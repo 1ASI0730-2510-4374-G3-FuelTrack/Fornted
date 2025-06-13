@@ -1,13 +1,18 @@
 <template>
-  <div class="chart-container">
-    <h2 class="chart-title">Fuel Volume by Type</h2>
-    <Bar :data="chartData" :options="chartOptions" />
-  </div>
+  <Card class="chart-container">
+    <template #title>
+      <span class="chart-title">Fuel Volume by Type</span>
+    </template>
+    <template #content>
+      <Bar :data="chartData" :options="chartOptions" />
+    </template>
+  </Card>
 </template>
 
 <script setup>
 import { computed } from 'vue'
 import { Bar } from 'vue-chartjs'
+import Card from 'primevue/card'
 import {
   Chart as ChartJS,
   Title,
@@ -27,10 +32,9 @@ const props = defineProps({
   }
 })
 
-// Agrupar volumen por tipo de combustible
+// Volumen por tipo de combustible
 const volumesByFuel = computed(() => {
   const map = {}
-
   props.orders.forEach(order => {
     order.products.forEach(p => {
       const type = p.product
@@ -38,39 +42,41 @@ const volumesByFuel = computed(() => {
       map[type] = (map[type] || 0) + qty
     })
   })
-
   return map
 })
 
-// Preparar datos para Chart.js
 const chartData = computed(() => ({
   labels: Object.keys(volumesByFuel.value),
   datasets: [
     {
       label: 'Gallons',
       data: Object.values(volumesByFuel.value),
-      backgroundColor: '#22c55e'
+      backgroundColor: '#22c55e',
+      borderRadius: 6
     }
   ]
 }))
 
 const chartOptions = {
   responsive: true,
+  maintainAspectRatio: false,
   plugins: {
     legend: { display: false },
     tooltip: {
       backgroundColor: '#1e2e4a',
       titleColor: '#22c55e',
-      bodyColor: '#ffffff'
+      bodyColor: '#ffffff',
+      borderWidth: 1,
+      borderColor: '#22c55e'
     }
   },
   scales: {
     x: {
-      ticks: { color: '#cbd5e1' },
+      ticks: { color: '#cbd5e1', font: { weight: 500 } },
       grid: { color: '#1e293b' }
     },
     y: {
-      ticks: { color: '#cbd5e1' },
+      ticks: { color: '#cbd5e1', font: { weight: 500 } },
       grid: { color: '#1e293b' }
     }
   }
@@ -79,18 +85,20 @@ const chartOptions = {
 
 <style scoped>
 .chart-container {
-  flex: 1;
   background-color: #1e2e4a;
   border-radius: 12px;
-  padding: 1.5rem;
+  padding: 1.2rem;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   min-width: 300px;
+  height: 340px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .chart-title {
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   color: #ffffff;
-  margin-bottom: 1rem;
 }
 </style>

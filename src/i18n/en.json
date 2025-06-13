@@ -3,23 +3,23 @@
     "title": "Welcome to FuelTrack",
     "subtitle": "Select your user type to continue:",
     "client_title": "Client",
-    "client_desc": "Companies requesting fuel",
+    "client_desc": "Companies that request fuel",
     "supplier_title": "Supplier",
-    "supplier_desc": "Companies supplying fuel"
+    "supplier_desc": "Companies that supply fuel"
   },
   "login": {
     "client": {
-      "subtitle": "Optimize your fuel orders management",
-      "submit": "Enter as Client",
+      "subtitle": "Optimize the management of your fuel orders",
+      "submit": "Login as Client",
       "not_client": "Not a Client?"
     },
     "supplier": {
-      "subtitle": "Supplier Access Portal",
-      "submit": "Enter as Supplier",
+      "subtitle": "Access portal for Suppliers",
+      "submit": "Login as Supplier",
       "not_supplier": "Not a Supplier?"
     },
-    "demo_client": "✅ Logged in as demo client",
-    "demo_supplier": "✅ Logged in as demo supplier"
+    "demo_client": "✅ Demo access as client",
+    "demo_supplier": "✅ Demo access as supplier"
   },
   "sidebar": {
     "client": {
@@ -32,8 +32,8 @@
     },
     "supplier": {
       "admin": "Admin",
-      "orders": "Orders Management",
-      "conciliations": "Conciliations",
+      "orders": "Order Management",
+      "conciliations": "Reconciliations",
       "dispatch": "Dispatch",
       "analytics": "Analytics",
       "prices": "Prices",
@@ -41,8 +41,8 @@
     }
   },
   "orders": {
-    "my_orders": "My orders",
-    "create_order": "Create order",
+    "my_orders": "My Orders",
+    "create_order": "Create Order",
     "filters": {
       "total": "Total Orders",
       "approved": "Approved",
@@ -67,9 +67,18 @@
     }
   },
   "common": {
-    "email": "Email Address",
+    "email": "Email",
     "password": "Password",
     "ruc": "RUC",
-    "click_here": "Click Here"
+    "click_here": "Click here"
+  },
+  "pagination": {
+    "items_per_page": "Items per page",
+    "of": "of",
+    "items": "items"
+  },
+  "analytics": {
+    "fuelConsumption": "Fuel consumption by type",
+    "totalVolume": "Total volume dispatched (gallons)"
   }
 }

@@ -71,5 +71,15 @@
     "password": "Contraseña",
     "ruc": "RUC",
     "click_here": "Haz clic aquí"
+  },
+  "pagination": {
+    "items_per_page": "Elementos por página",
+    "of": "de",
+    "items": "elementos"
+  },
+  "analytics": {
+    "fuelConsumption": "Consumo por tipo de combustible",
+    "totalVolume": "Volumen total despachado (galones)"
   }
+
 }

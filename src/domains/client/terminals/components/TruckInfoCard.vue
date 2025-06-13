@@ -1,16 +1,38 @@
 <template>
-  <div class="truck-info-card">
-    <h3><i class="ph ph-truck"></i> {{ truck.plate }}</h3>
-    <ul class="details">
-      <li><i class="ph ph-user"></i> Conductor: {{ truck.driver }}</li>
-      <li><i class="ph ph-map-pin"></i> Origen: {{ truck.origin }}</li>
-      <li><i class="ph ph-gas-pump"></i> Combustible: {{ truck.fuel }} - {{ truck.quantity }} gal</li>
-      <li><i class="ph ph-clock"></i> Estado: {{ truck.status }}</li>
-    </ul>
-  </div>
+  <Card class="truck-card">
+    <template #title>
+      <div class="flex align-items-center gap-2">
+        <i class="ph ph-truck text-primary text-xl"></i>
+        <span class="font-bold text-lg text-surface-900">{{ truck.plate }}</span>
+      </div>
+    </template>
+
+    <template #content>
+      <ul class="p-0 m-0 list-none flex flex-column gap-3 text-sm text-surface-700">
+        <li class="flex align-items-center gap-2">
+          <i class="ph ph-user text-primary"></i>
+          <span>Conductor: <strong>{{ truck.driver }}</strong></span>
+        </li>
+        <li class="flex align-items-center gap-2">
+          <i class="ph ph-map-pin text-primary"></i>
+          <span>Origen: <strong>{{ truck.origin }}</strong></span>
+        </li>
+        <li class="flex align-items-center gap-2">
+          <i class="ph ph-gas-pump text-primary"></i>
+          <span>{{ truck.fuel }} – {{ truck.quantity }} gal</span>
+        </li>
+        <li class="flex align-items-center gap-2">
+          <i class="ph ph-clock text-primary"></i>
+          <span>Estado: <strong>{{ truck.status }}</strong></span>
+        </li>
+      </ul>
+    </template>
+  </Card>
 </template>
 
 <script setup>
+import Card from 'primevue/card'
+
 defineProps({
   truck: {
     type: Object,
@@ -20,45 +42,10 @@ defineProps({
 </script>
 
 <style scoped>
-.truck-info-card {
-  background: #ffffff;
-  padding: 1.2rem 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  color: #1e293b;
-  font-size: 0.9rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  display: flex;
-  flex-direction: column;
-}
-
-.truck-info-card h3 {
-  margin-bottom: 0.8rem;
-  font-size: 1rem;
-  color: #0f172a;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.details {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-.details li {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #334155;
-}
-
-.details i {
-  color: #0ea5e9;
-  font-size: 1rem;
+.truck-card {
+  background: var(--surface-card);
+  border-radius: var(--border-radius-xl);
+  box-shadow: var(--shadow-2);
+  padding: 1rem;
 }
 </style>

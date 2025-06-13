@@ -1,14 +1,21 @@
 <template>
   <section class="orders-list">
-    <h1>{{ $t('orders.my_orders') }} </h1>
+    <div class="header">
+      <h1 class="text-2xl font-semibold text-surface-800 mb-4">
+        {{ $t('orders.my_orders') }}
+      </h1>
 
-    <!-- Filtros -->
-    <FiltersPanel @filter="applyFilters" />
+      <div class="flex justify-between items-center mb-3 flex-wrap gap-2">
+        <FiltersPanel @filter="applyFilters" />
 
-    <!-- Botón crear orden -->
-    <button @click="showModal = true" class="create-btn">
-      <i class="ph ph-plus-circle"></i> {{ $t('orders.create_order') }}
-    </button>
+        <Button
+            icon="pi pi-plus-circle"
+            :label="$t('orders.create_order')"
+            class="p-button-success"
+            @click="showModal = true"
+        />
+      </div>
+    </div>
 
     <!-- Tabla de órdenes -->
     <OrdersTable :orders="paginatedOrders" />
@@ -30,13 +37,13 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import Button from 'primevue/button'
 import FiltersPanel from '@/domains/client/orders/components/FiltersPanel.vue'
 import OrdersTable from '@/domains/client/orders/components/OrdersTable.vue'
 import PaginationControls from '@/domains/client/orders/components/PaginationControls.vue'
 import CreateOrderModal from '@/domains/client/orders/components/CreateOrderModal/CreateOrderModal.vue'
 import { useOrdersStore } from '../store/useOrdersStore'
 
-// Estado reactivo
 const ordersStore = useOrdersStore()
 const orders = computed(() => ordersStore.orders)
 const currentPage = ref(1)
@@ -47,12 +54,10 @@ const statusFilter = ref('')
 const startDateFilter = ref('')
 const endDateFilter = ref('')
 
-// Obtener data al montar
 onMounted(async () => {
   await ordersStore.fetchOrders()
 })
 
-// Aplicar filtros desde panel
 function applyFilters(filters) {
   statusFilter.value = filters.status
   startDateFilter.value = filters.startDate
@@ -60,7 +65,6 @@ function applyFilters(filters) {
   currentPage.value = 1
 }
 
-// Filtro combinado
 const filteredOrders = computed(() => {
   return orders.value.filter(order => {
     const orderDate = new Date(order.created)
@@ -73,7 +77,6 @@ const filteredOrders = computed(() => {
   })
 })
 
-// Paginación
 const totalPages = computed(() => {
   return Math.ceil(filteredOrders.value.length / itemsPerPage.value)
 })
@@ -83,7 +86,6 @@ const paginatedOrders = computed(() => {
   return filteredOrders.value.slice(start, start + itemsPerPage.value)
 })
 
-// Navegación
 function handlePageChange(newPage) {
   currentPage.value = newPage
 }
@@ -102,30 +104,7 @@ async function handleModalClose() {
 <style scoped>
 .orders-list {
   padding: 2rem;
-}
-
-.create-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background-color: #10b981;
-  color: white;
-  padding: 0.6rem 1.2rem;
-  border: none;
-  border-radius: 8px;
-  font-weight: 500;
-  font-size: 0.9rem;
-  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.4);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-  cursor: pointer;
-}
-
-.create-btn:hover {
-  background-color: #059669;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.6);
-}
-
-.create-btn:active {
-  transform: scale(0.97);
+  background-color: #ffffff;
+  transition: background-color 0.3s ease;
 }
 </style>

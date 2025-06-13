@@ -2,21 +2,20 @@
   <div class="analytics-dashboard">
     <AnalyticsHeader />
 
-    <section class="operators-section">
-      <h2>Operators</h2>
-      <OperatorList :orders="orders" />
-    </section>
+    <Card class="mb-4">
+      <template #title>Operadores destacados</template>
+      <template #content>
+        <OperatorList :orders="orders" />
+      </template>
+    </Card>
 
-    <section class="chart-section">
-      <div class="chart-header">
-        <h2>Weekly Activity</h2>
-        <select v-model="selectedTerminal">
-          <option value="">All Terminals</option>
-          <option v-for="t in terminals" :key="t" :value="t">{{ t }}</option>
-        </select>
-      </div>
-      <WeeklyChart :terminal="selectedTerminal" :orders="orders" />
-    </section>
+    <Card>
+      <template #title>
+      </template>
+      <template #content>
+        <WeeklyChart :terminal="selectedTerminal" :orders="orders" />
+      </template>
+    </Card>
   </div>
 </template>
 
@@ -25,14 +24,20 @@ import { ref, onMounted } from 'vue'
 import AnalyticsHeader from '../components/AnalyticsHeader.vue'
 import OperatorList from '../components/OperatorList.vue'
 import WeeklyChart from '../components/WeeklyChart.vue'
-import { getOrders } from '@/domains/client/orders/services/orderService.js'
+import { getOrders } from '@/domains/client/orders/services/orderService'
 import { error as logError } from '@/services/logger'
+import Dropdown from 'primevue/dropdown'
+import Card from 'primevue/card'
 
 // Terminales disponibles
-const terminals = ['Callao', 'Lurín', 'Pisco', 'Monte Azul']
-const selectedTerminal = ref('')
+const terminalOptions = [
+  { label: 'Callao', value: 'Callao' },
+  { label: 'Lurín', value: 'Lurín' },
+  { label: 'Pisco', value: 'Pisco' },
+  { label: 'Monte Azul', value: 'Monte Azul' }
+]
 
-// Órdenes desde la API fake
+const selectedTerminal = ref('')
 const orders = ref([])
 
 onMounted(async () => {
@@ -47,29 +52,6 @@ onMounted(async () => {
 <style scoped>
 .analytics-dashboard {
   padding: 2rem;
-  background: #f9fafb;
-}
-
-.operators-section,
-.chart-section {
-  background: #fff;
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-top: 1.5rem;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
-}
-
-.chart-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-select {
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  padding: 0.4rem 0.75rem;
-  font-size: 0.875rem;
+  background-color: var(--surface-ground);
 }
 </style>

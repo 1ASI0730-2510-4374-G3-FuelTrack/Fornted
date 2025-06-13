@@ -17,14 +17,13 @@
         <!-- Fila principal -->
         <tr class="order-row">
           <td class="icon-cell">
-            <button class="expand-btn" @click="toggleExpanded(order.id)">
-              <i
-                  :class="[
-                    'ph',
-                    isExpanded(order.id) ? 'ph-caret-down' : 'ph-caret-right'
-                  ]"
-              ></i>
-            </button>
+            <Button
+                icon="pi pi-chevron-down"
+                text
+                rounded
+                @click="toggleExpanded(order.id)"
+                :class="['expand-btn', isExpanded(order.id) && 'rotated']"
+            />
           </td>
           <td>{{ formatDate(order.created) }}</td>
           <td>{{ order.user }}</td>
@@ -36,14 +35,13 @@
               </span>
           </td>
           <td class="text-end">
-            <button
+            <Button
+                label="Approve"
+                icon="pi pi-check-circle"
                 class="approve-btn"
                 :disabled="!order.approvable"
                 @click="$emit('approve', order)"
-            >
-              <i class="ph ph-check-circle"></i>
-              Approve
-            </button>
+            />
           </td>
         </tr>
 
@@ -64,6 +62,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import Button from 'primevue/button'
 import ConciliationRow from './ConciliationRow.vue'
 
 const props = defineProps({
@@ -145,15 +144,20 @@ td.text-end {
   text-align: center;
 }
 
-.expand-btn {
+/* Expand button */
+:deep(.expand-btn.p-button) {
   background: none;
-  border: none;
   color: #94a3b8;
   font-size: 1.2rem;
-  cursor: pointer;
-  transition: transform 0.2s ease;
+  border: none;
+  padding: 0.25rem;
 }
 
+:deep(.expand-btn.rotated i) {
+  transform: rotate(180deg);
+}
+
+/* Badge estilo custom */
 .badge {
   padding: 0.3rem 0.7rem;
   border-radius: 8px;
@@ -173,23 +177,21 @@ td.text-end {
   color: #22c55e;
 }
 
-.approve-btn {
+/* Botón approve */
+:deep(.approve-btn.p-button) {
   background-color: #22c55e;
   color: white;
   padding: 0.4rem 0.9rem;
   font-size: 0.8rem;
   font-weight: 600;
-  border: none;
   border-radius: 8px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
   gap: 0.4rem;
 }
 
-.approve-btn:disabled {
+:deep(.approve-btn.p-button:disabled),
+:deep(.approve-btn.p-button.p-disabled) {
   background-color: #64748b;
-  cursor: not-allowed;
   opacity: 0.5;
+  cursor: not-allowed;
 }
 </style>

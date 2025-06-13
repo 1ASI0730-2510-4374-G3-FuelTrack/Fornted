@@ -7,51 +7,42 @@
     </div>
 
     <div v-else class="orders-list">
-      <div v-for="order in orders" :key="order.id" class="order-card">
-        <div class="header">
-          <h2>Order: {{ order.orderId }}</h2>
-          <span class="date">{{ formatDate(order.created) }}</span>
-        </div>
+      <Card v-for="order in orders" :key="order.id" class="order-card">
+        <template #title>
+          <div class="header">
+            <h2>Order: {{ order.orderId }}</h2>
+            <span class="date">{{ formatDate(order.created) }}</span>
+          </div>
+        </template>
 
-        <div class="info-grid">
-          <div><strong>Client:</strong> {{ order.user }}</div>
-          <div><strong>Terminal:</strong> {{ order.terminal }}</div>
-          <div><strong>Amount:</strong> {{ order.amount }}</div>
-        </div>
+        <template #content>
+          <div class="info-grid">
+            <div><strong>Client:</strong> {{ order.user }}</div>
+            <div><strong>Terminal:</strong> {{ order.terminal }}</div>
+            <div><strong>Amount:</strong> {{ formatCurrency(order.amount) }}</div>
+          </div>
 
-        <div class="transport-section" v-if="order.transport">
-          <h3>Transport Info</h3>
-          <ul>
-            <li><strong>Truck:</strong> {{ order.transport.truck.plate }}</li>
-            <li><strong>Driver:</strong> {{ order.transport.driver.name }}</li>
-            <li><strong>Tank:</strong> {{ order.transport.tank.code }}</li>
-          </ul>
-        </div>
+          <div class="transport-section" v-if="order.transport">
+            <h3>Transport Info</h3>
+            <ul>
+              <li><strong>Truck:</strong> {{ order.transport.truck.plate }}</li>
+              <li><strong>Driver:</strong> {{ order.transport.driver.name }}</li>
+              <li><strong>Tank:</strong> {{ order.transport.tank.code }}</li>
+            </ul>
+          </div>
 
-        <div class="products-section">
-          <h3>Products</h3>
-          <table>
-            <thead>
-            <tr>
-              <th>Product</th>
-              <th>Quantity</th>
-              <th>Unit</th>
-              <th>Price</th>
-              <th>Total</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="(p, i) in order.products" :key="i">
-              <td>{{ p.product }}</td>
-              <td>{{ p.quantity }}</td>
-              <td>{{ p.unit }}</td>
-              <td>{{ formatCurrency(p.price) }}</td>
-              <td>{{ formatCurrency(p.total) }}</td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+          <div class="products-section">
+            <h3>Products</h3>
+            <DataTable :value="order.products" class="dark-table" responsiveLayout="scroll">
+              <Column field="product" header="Product" />
+              <Column field="quantity" header="Quantity" />
+              <Column field="unit" header="Unit" />
+              <Column header="Price" :body="p => formatCurrency(p.price)" />
+              <Column header="Total" :body="p => formatCurrency(p.total)" />
+            </DataTable>
+          </div>
+        </template>
+      </Card>
     </div>
   </section>
 </template>
@@ -61,6 +52,9 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import API_BASE from '@/services/api'
 import { error as logError } from '@/services/logger'
+import Card from 'primevue/card'
+import DataTable from 'primevue/datatable'
+import Column from 'primevue/column'
 
 const orders = ref([])
 
@@ -117,23 +111,16 @@ onMounted(fetchReleasedOrders)
   gap: 1.5rem;
 }
 
-.order-card {
+.order-card :deep(.p-card) {
   background-color: #13253c;
   border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  color: #ffffff;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
-}
-
-.header h2 {
-  font-size: 1.2rem;
-  font-weight: 600;
 }
 
 .date {
@@ -145,41 +132,34 @@ onMounted(fetchReleasedOrders)
   display: flex;
   gap: 2rem;
   flex-wrap: wrap;
-  margin-bottom: 1rem;
   font-size: 0.9rem;
-}
-
-.transport-section,
-.products-section {
-  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .transport-section ul {
   list-style: none;
-  padding-left: 0;
+  padding: 0;
   font-size: 0.9rem;
   line-height: 1.6;
 }
 
-.products-section table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 0.5rem;
+.products-section {
+  margin-top: 1rem;
+}
+
+.dark-table :deep(.p-datatable) {
   background-color: #1a314a;
-  border-radius: 6px;
-  overflow: hidden;
+  border-radius: 8px;
+  color: #ffffff;
 }
 
-.products-section th,
-.products-section td {
-  padding: 0.6rem;
-  font-size: 0.85rem;
-  text-align: left;
-  border-bottom: 1px solid #2c445f;
-}
-
-.products-section th {
+.dark-table :deep(.p-datatable-thead > tr > th) {
   background-color: #1e3955;
   color: #cbd5e1;
+}
+
+.dark-table :deep(.p-datatable-tbody > tr > td) {
+  border-bottom: 1px solid #2c445f;
+  font-size: 0.85rem;
 }
 </style>

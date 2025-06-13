@@ -1,8 +1,8 @@
 <template>
   <tr class="dispatch-row">
-    <!-- Checkbox -->
+    <!-- Checkbox con PrimeVue -->
     <td>
-      <input type="checkbox" v-model="isChecked" class="checkbox" @change="emitSelection" />
+      <Checkbox v-model="isChecked" :binary="true" @change="emitSelection" />
     </td>
 
     <!-- Fecha formateada -->
@@ -17,7 +17,7 @@
     <!-- Terminal -->
     <td>{{ order.terminal }}</td>
 
-    <!-- Estado For Release -->
+    <!-- Estado -->
     <td>
       <PhCheckCircle
           v-if="order.approved"
@@ -27,40 +27,42 @@
       />
     </td>
 
-    <!-- Cargo (ícono ⚙️) -->
+    <!-- Botón Gear -->
     <td>
-      <PhGear
-          :size="22"
-          weight="bold"
-          class="gear-icon"
+      <Button
+          icon="pi pi-cog"
+          class="p-button-text p-button-sm text-white"
           @click="openModal(order.products[0])"
       />
     </td>
 
-    <!-- Modal -->
-    <AssignCargoModal
-        v-if="showModal"
-        :product="selectedProduct"
-        :order-id="order.id"
-        :trucks="trucks"
-        :drivers="drivers"
-        :tanks="tanks"
-        @close="showModal = false"
-    />
+    <!-- Modal con PrimeVue Dialog -->
+    <Dialog v-model:visible="showModal" modal header="Assign Cargo" :style="{ width: '50vw' }">
+      <AssignCargoModal
+          :product="selectedProduct"
+          :order-id="order.id"
+          :trucks="trucks"
+          :drivers="drivers"
+          :tanks="tanks"
+          @close="showModal = false"
+      />
+    </Dialog>
   </tr>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { PhGear, PhCheckCircle } from '@phosphor-icons/vue'
+import { PhCheckCircle } from '@phosphor-icons/vue'
 import AssignCargoModal from './AssignCargoModal.vue'
 import { getTrucks, getDrivers, getTanks } from '../services/dispatchService'
 
+// PrimeVue
+import Checkbox from 'primevue/checkbox'
+import Dialog from 'primevue/dialog'
+import Button from 'primevue/button'
+
 const props = defineProps({
-  order: {
-    type: Object,
-    required: true
-  }
+  order: Object
 })
 
 const emit = defineEmits(['select'])
@@ -84,8 +86,11 @@ function emitSelection() {
 
 const formattedDate = computed(() => {
   const date = new Date(props.order.created)
-  const options = { day: 'numeric', month: 'short', year: 'numeric' }
-  return date.toLocaleDateString('en-US', options).toUpperCase()
+  return date.toLocaleDateString('en-US', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  }).toUpperCase()
 })
 
 onMounted(async () => {
@@ -98,7 +103,6 @@ onMounted(async () => {
 <style scoped>
 .dispatch-row {
   background-color: #0c1c2f;
-  transition: background-color 0.2s ease;
 }
 
 .dispatch-row:hover {
@@ -110,27 +114,14 @@ td {
   font-size: 0.875rem;
   border-bottom: 1px solid #1f2d44;
   color: #e2e8f0;
-  vertical-align: middle;
-}
-
-.checkbox {
-  accent-color: #22c55e;
-  width: 16px;
-  height: 16px;
 }
 
 .icon-check {
   color: #22c55e;
-  cursor: default;
 }
 
-.gear-icon {
-  color: #e2e8f0;
-  cursor: pointer;
-  transition: color 0.2s ease;
-}
-
-.gear-icon:hover {
-  color: #38bdf8;
+:deep(.p-dialog) {
+  background-color: #1e2e4a;
+  color: white;
 }
 </style>

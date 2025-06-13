@@ -1,11 +1,12 @@
 <template>
   <section class="provider-analytics">
+    <!-- Encabezado -->
     <header class="header">
       <h1>Provider Analytics</h1>
       <p class="subtitle">Statistics and performance overview</p>
     </header>
 
-    <!-- Tarjetas de resumen -->
+    <!-- Tarjetas resumen -->
     <div class="stats-cards">
       <AnalyticsSummaryCard title="Total Orders" :value="totalOrders" />
       <AnalyticsSummaryCard title="Total Volume (gal)" :value="totalVolume" />
@@ -56,27 +57,29 @@ const totalClients = computed(() => {
 }
 
 .header h1 {
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   font-weight: 600;
+  margin-bottom: 0.3rem;
+  color: #ffffff;
 }
 
 .subtitle {
-  font-size: 0.9rem;
-  color: #94a3b8;
-  margin-top: 0.2rem;
-  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+  color: #a0aec0;
+  margin-bottom: 2rem;
 }
 
 .stats-cards {
   display: flex;
   flex-wrap: wrap;
   gap: 1.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 }
 
 .charts {
   display: flex;
   flex-wrap: wrap;
   gap: 2rem;
+  justify-content: space-between;
 }
 </style>

@@ -1,5 +1,6 @@
 <template>
   <header class="orders-header">
+    <!-- Título y breadcrumb -->
     <div class="top-row">
       <div class="left-title">
         <h1 class="title">Order Management</h1>
@@ -13,20 +14,21 @@
       </div>
     </div>
 
+    <!-- KPIs -->
     <div class="kpi-row">
       <div class="kpi-block">
         <span class="kpi-value">{{ formatNumber(totalOrders) }}</span>
         <span class="kpi-label">Total Orders</span>
       </div>
 
-      <div class="kpi-divider"></div>
+      <Divider layout="vertical" class="kpi-divider" />
 
       <div class="kpi-block">
         <span class="kpi-value">{{ formatNumber(totalApproved) }}</span>
         <span class="kpi-label">Approved</span>
       </div>
 
-      <div class="kpi-divider"></div>
+      <Divider layout="vertical" class="kpi-divider" />
 
       <div class="kpi-block">
         <span class="kpi-value">{{ formatNumber(totalRequested) }}</span>
@@ -37,6 +39,8 @@
 </template>
 
 <script setup>
+import Divider from 'primevue/divider'
+
 const props = defineProps({
   totalOrders: Number,
   totalApproved: Number,
@@ -58,7 +62,7 @@ function formatNumber(value) {
   margin-bottom: 1rem;
 }
 
-/* Primera fila: título a la izquierda, breadcrumb a la derecha */
+/* Título y breadcrumb */
 .top-row {
   display: flex;
   justify-content: space-between;
@@ -96,7 +100,7 @@ function formatNumber(value) {
   color: #ffffff;
 }
 
-/* Segunda fila: KPIs alineados horizontalmente con divisores */
+/* KPIs */
 .kpi-row {
   display: flex;
   justify-content: flex-end;
@@ -124,10 +128,10 @@ function formatNumber(value) {
   margin-top: 0.2rem;
 }
 
-.kpi-divider {
-  width: 1px;
-  height: 2.5rem;
+/* PrimeVue Divider personalizado */
+:deep(.kpi-divider.p-divider.p-divider-vertical:before) {
   background-color: #3b4e68;
   opacity: 0.5;
+  width: 1px;
 }
 </style>

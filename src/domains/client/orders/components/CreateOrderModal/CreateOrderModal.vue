@@ -1,91 +1,82 @@
 <template>
-  <Teleport to="body">
-    <div class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-      <div class="modal-content" tabindex="-1">
-        <!-- Header -->
-        <header class="modal-header">
-          <h2 id="modal-title">Crear nueva orden</h2>
-          <button
-              class="close-btn"
-              @click="emit('close')"
-              aria-label="Cerrar modal"
-          >
-            ×
-          </button>
-        </header>
-
-        <!-- Progress -->
-        <ProgressStepper :current-step="step" />
-
-        <!-- Body -->
-        <div class="modal-body">
-          <component
-              :is="currentComponent"
-              v-model:modelValue="formData"
-              @invalid="validationFailed = true"
-          />
-        </div>
-
-        <!-- Footer -->
-        <footer class="modal-footer">
-          <button
-              v-if="step > 1"
-              @click="prevStep"
-              class="btn secondary"
-              aria-label="Retroceder"
-          >
-            Atrás
-          </button>
-          <button
-              v-if="step < 3"
-              @click="nextStep"
-              class="btn primary"
-              aria-label="Avanzar"
-          >
-            Siguiente
-          </button>
-          <button
-              v-else
-              @click="confirmOrder"
-              class="btn success"
-              aria-label="Confirmar orden"
-          >
-            Confirmar
-          </button>
-        </footer>
+  <Dialog
+      v-model:visible="visible"
+      modal
+      :closable="false"
+      :style="{ width: '60vw' }"
+      header="Crear nueva orden"
+  >
+    <template #header>
+      <div class="flex justify-between items-center w-full">
+        <span class="text-xl font-bold text-surface-900">Crear nueva orden</span>
+        <Button icon="pi pi-times" severity="secondary" text rounded @click="emit('close')" />
       </div>
-    </div>
-  </Teleport>
+    </template>
+
+    <ProgressStepper :current-step="step" :steps="stepItems" class="mb-4" />
+
+    <component
+        :is="currentComponent"
+        v-model:modelValue="formData"
+        @invalid="handleInvalid"
+        @valid="handleValid"
+        @confirm="confirmOrder"
+    />
+
+    <template #footer>
+      <div class="flex justify-end gap-2">
+        <Button v-if="step > 1" label="Atrás" severity="secondary" @click="prevStep" />
+        <Button
+            v-if="step < 3"
+            label="Siguiente"
+            severity="primary"
+            :disabled="!isStepValid"
+            @click="nextStep"
+        />
+        <Button
+            v-else
+            label="Confirmar"
+            severity="success"
+            :disabled="!isStepValid"
+            @click="confirmOrder"
+        />
+      </div>
+    </template>
+  </Dialog>
+  <OrderSuccessDialog ref="successDialog" @closed="handleSuccessClosed" />
+
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
 import ProgressStepper from './ProgressStepper.vue'
+import { ref, computed, nextTick, defineExpose } from 'vue'
+import { useOrdersStore } from '@/domains/client/orders/store/useOrdersStore'
+import { error as logError } from '@/services/logger'
 import StepOrderDetails from './StepOrderDetails.vue'
 import StepPayments from './StepPayments.vue'
 import StepConfirmOrder from './StepConfirmOrder.vue'
-import { useOrdersStore } from '../../store/useOrdersStore'
-import { error as logError } from '@/services/logger'
+import OrderSuccessDialog from './OrderSuccessDialog.vue'
 
 const emit = defineEmits(['close'])
-const ordersStore = useOrdersStore()
 
+const visible = ref(true)
 const step = ref(1)
-const validationFailed = ref(false)
+const isStepValid = ref(false)
+const successDialog = ref(null)
+const ordersStore = useOrdersStore()
 
 const formData = ref({
   fullName: '',
   terminal: '',
-  details: [
-    {
-      product: '',
-      quantity: 0,
-      note: '',
-      totalPrice: '0.00'
-    }
-  ],
+  details: [{ product: '', quantity: 0, note: '', totalPrice: '0.00' }],
   payments: []
 })
+
+const stepItems = ref([
+  { label: 'Orden', icon: 'pi pi-file-edit', status: 'pending' },
+  { label: 'Pago', icon: 'pi pi-wallet', status: 'pending' },
+  { label: 'Confirmar', icon: 'pi pi-check-circle', status: 'pending' }
+])
 
 const currentComponent = computed(() => {
   if (step.value === 1) return StepOrderDetails
@@ -93,21 +84,48 @@ const currentComponent = computed(() => {
   return StepConfirmOrder
 })
 
+function handleValid() {
+  isStepValid.value = true
+  stepItems.value[step.value - 1].status = 'completed'
+}
+function handleSuccessClosed() {
+  resetModal()
+  nextTick(() => {
+    visible.value = true
+  })
+}
+
+function handleInvalid() {
+  isStepValid.value = false
+  stepItems.value[step.value - 1].status = 'failed'
+}
+
 function nextStep() {
-  validationFailed.value = false
-  if (step.value === 1) {
-    setTimeout(() => {
-      if (!validationFailed.value) step.value++
-    }, 0)
-  } else {
+  if (isStepValid.value && step.value < 3) {
     step.value++
+    isStepValid.value = false
   }
 }
 
 function prevStep() {
-  if (step.value > 1) step.value--
+  step.value--
+  isStepValid.value = true
 }
 
+// 🎯 Función que reinicia todo
+function resetModal() {
+  step.value = 1
+  isStepValid.value = false
+  formData.value = {
+    fullName: '',
+    terminal: '',
+    details: [{ product: '', quantity: 0, note: '', totalPrice: '0.00' }],
+    payments: []
+  }
+  stepItems.value.forEach(s => s.status = 'pending')
+}
+
+// ✅ Confirmar y mostrar diálogo de éxito
 async function confirmOrder() {
   try {
     const enrichedProducts = formData.value.details.map((detail, index) => {
@@ -143,28 +161,39 @@ async function confirmOrder() {
       products: enrichedProducts
     })
 
-    emit('close')
+    visible.value = false
+    successDialog.value?.showDialog()
+
+    // Esperar que el modal de éxito se cierre y luego reiniciar
+    setTimeout(() => {
+      resetModal()
+    }, 500)
   } catch (err) {
-    logError('Error al confirmar orden:', err.message, err.response?.data)
+    logError('Error al confirmar orden:', err.message)
   }
 }
+
+// 👉 Exponer para el padre si deseas reabrir con estado limpio
+function resetAndOpen() {
+  resetModal()
+  nextTick(() => {
+    visible.value = true
+  })
+}
+
+defineExpose({ resetAndOpen })
 
 function generarOrderId() {
   return 'd_' + Math.random().toString(36).substring(2, 12)
 }
-
 function calcularTotal(details) {
-  const total = details.reduce((acc, d) => {
-    const raw = typeof d.totalPrice === 'string'
-        ? parseFloat(d.totalPrice.replace('S/', '').trim())
-        : parseFloat(d.totalPrice)
-    return acc + (isNaN(raw) ? 0 : raw)
-  }, 0)
-  return `S/ ${total.toFixed(2)}`
+  return `S/ ${details.reduce((acc, d) => acc + parseFloat(d.totalPrice.replace('S/', '').trim() || 0), 0).toFixed(2)}`
 }
 </script>
 
+
 <style scoped>
+/* Mismo estilo que ya tenías, bien organizado y moderno */
 .modal-overlay {
   position: fixed;
   inset: 0;

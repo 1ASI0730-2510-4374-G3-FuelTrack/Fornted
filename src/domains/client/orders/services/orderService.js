@@ -27,7 +27,13 @@ export async function getOrders() {
  */
 export async function createOrder(order) {
     try {
-        const res = await axios.post(API_URL, order)
+        // 🛠️ Forzar que el id sea string
+        const payload = {
+            ...order,
+            id: String(order.id || Date.now()) // genera o transforma a string
+        }
+
+        const res = await axios.post(API_URL, payload)
         return res.data
     } catch (error) {
         logError('Error creando orden:', error)

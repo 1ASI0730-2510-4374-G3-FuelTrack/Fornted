@@ -1,31 +1,38 @@
 <template>
   <div class="pagination-container">
     <div class="left">
-      <label>
-        Items per page:
-        <select v-model.number="limit" @change="changeLimit">
-          <option v-for="n in [5, 10, 13, 25]" :key="n" :value="n">{{ n }}</option>
-        </select>
+      <label for="limit">
+        {{ $t('pagination.items_per_page') }}:
       </label>
+      <Dropdown
+          inputId="limit"
+          :options="limits"
+          v-model="limit"
+          @change="changeLimit"
+          optionLabel="label"
+          optionValue="value"
+          class="w-10rem"
+      />
     </div>
 
     <div class="center">
-      {{ startItem }} – {{ endItem }} of {{ totalItems }} items
+      {{ startItem }} – {{ endItem }} {{ $t('pagination.of') }} {{ totalItems }} {{ $t('pagination.items') }}
     </div>
 
     <div class="right">
-      <button :disabled="currentPage === 1" @click="emit('change', 1)">«</button>
-      <button :disabled="currentPage === 1" @click="emit('change', currentPage - 1)">‹</button>
+      <Button icon="pi pi-angle-double-left" :disabled="currentPage === 1" @click="emit('change', 1)" text />
+      <Button icon="pi pi-angle-left" :disabled="currentPage === 1" @click="emit('change', currentPage - 1)" text />
       <span class="page">{{ currentPage }}</span>
-      <button :disabled="currentPage === totalPages" @click="emit('change', currentPage + 1)">›</button>
-      <button :disabled="currentPage === totalPages" @click="emit('change', totalPages)">»</button>
+      <Button icon="pi pi-angle-right" :disabled="currentPage === totalPages" @click="emit('change', currentPage + 1)" text />
+      <Button icon="pi pi-angle-double-right" :disabled="currentPage === totalPages" @click="emit('change', totalPages)" text />
     </div>
   </div>
 </template>
 
-<script setup>
-import { computed, ref, watch } from 'vue'
-import { getOrders } from '@/domains/client/orders/services/orderService.js'
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+import Dropdown from 'primevue/dropdown'
+import Button from 'primevue/button'
 
 const props = defineProps({
   currentPage: Number,
@@ -37,6 +44,13 @@ const props = defineProps({
 const emit = defineEmits(['change', 'limitChange'])
 
 const limit = ref(props.itemsPerPage)
+
+const limits = [
+  { label: '5', value: 5 },
+  { label: '10', value: 10 },
+  { label: '13', value: 13 },
+  { label: '25', value: 25 }
+]
 
 const startItem = computed(() => {
   return (props.currentPage - 1) * limit.value + 1
@@ -63,50 +77,25 @@ function changeLimit() {
   border-top: 1px solid #e2e8f0;
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
+  flex-wrap: wrap;
+  gap: 1rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.left label {
+.left, .center, .right {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
-select {
-  padding: 0.35rem 0.75rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  font-size: 13px;
-}
-
-.right {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-button {
-  padding: 0.4rem 0.75rem;
-  border: none;
-  border-radius: 6px;
-  background-color: #0ea5e9;
-  color: white;
-  font-size: 13px;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-button:hover:not(:disabled) {
-  background-color: #0284c7;
-}
-
-button:disabled {
-  background-color: #cbd5e1;
-  color: white;
-  cursor: not-allowed;
+.center {
+  font-weight: 500;
+  color: #334155;
 }
 
 .page {
   font-weight: 600;
   color: #1e293b;
+  padding: 0 0.5rem;
 }
 </style>

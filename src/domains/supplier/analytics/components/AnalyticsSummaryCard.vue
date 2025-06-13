@@ -1,12 +1,17 @@
 <template>
-  <div class="summary-card">
-    <h3 class="title">{{ title }}</h3>
-    <p class="value">{{ formattedValue }}</p>
-  </div>
+  <Card class="summary-card">
+    <template #title>
+      <span class="title">{{ title }}</span>
+    </template>
+    <template #content>
+      <p class="value">{{ formattedValue }}</p>
+    </template>
+  </Card>
 </template>
 
 <script setup>
 import { computed } from 'vue'
+import Card from 'primevue/card'
 
 const props = defineProps({
   title: String,
@@ -22,7 +27,7 @@ const formattedValue = computed(() => {
 </script>
 
 <style scoped>
-.summary-card {
+:deep(.summary-card) {
   flex: 1;
   min-width: 220px;
   background-color: #1e2e4a;
@@ -31,9 +36,10 @@ const formattedValue = computed(() => {
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
   text-align: center;
   transition: transform 0.2s ease;
+  color: white;
 }
 
-.summary-card:hover {
+:deep(.summary-card:hover) {
   transform: translateY(-3px);
 }
 
