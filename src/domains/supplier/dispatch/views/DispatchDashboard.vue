@@ -1,12 +1,12 @@
 <template>
   <section class="dispatch-dashboard">
-    <!-- HEADER: Fiel a Figma -->
+    <!-- Encabezado con filtros y KPIs -->
     <DispatchHeader
         :hasSelected="selectedOrderIds.length > 0"
         @release="releaseSelectedOrders"
     />
 
-    <!-- TABLA -->
+    <!-- Tabla de órdenes aprobadas -->
     <DispatchTable
         :orders="orders"
         @select="handleSelectOrder"
@@ -20,32 +20,27 @@ import { ref, onMounted } from 'vue'
 import { getApprovedOrders, markAsReleased } from '../services/dispatchService'
 import DispatchHeader from '../components/DispatchHeader.vue'
 import DispatchTable from '../components/DispatchTable.vue'
+import { error as logError } from '@/services/logger'
 
 const orders = ref([])
 const selectedOrderIds = ref([])
 
-// Obtener las órdenes aprobadas desde db.json
 async function fetchOrders() {
   try {
-    const data = await getApprovedOrders()
-    orders.value = data
+    orders.value = await getApprovedOrders()
   } catch (error) {
-    console.error('Error fetching dispatch orders:', error)
+    logError('❌ Error fetching dispatch orders:', error)
   }
 }
 
-// Manejar selección individual por checkbox
 function handleSelectOrder({ id, selected }) {
-  if (selected) {
-    if (!selectedOrderIds.value.includes(id)) {
-      selectedOrderIds.value.push(id)
-    }
-  } else {
+  if (selected && !selectedOrderIds.value.includes(id)) {
+    selectedOrderIds.value.push(id)
+  } else if (!selected) {
     selectedOrderIds.value = selectedOrderIds.value.filter(o => o !== id)
   }
 }
 
-// Liberar todas las órdenes seleccionadas
 async function releaseSelectedOrders() {
   for (const id of selectedOrderIds.value) {
     await markAsReleased(id)
@@ -54,10 +49,7 @@ async function releaseSelectedOrders() {
   await fetchOrders()
 }
 
-// Cargar órdenes al iniciar
-onMounted(() => {
-  fetchOrders()
-})
+onMounted(fetchOrders)
 </script>
 
 <style scoped>

@@ -22,6 +22,14 @@ npm install
 npm run dev
 ```
 
+### Variables de entorno
+
+Cree un archivo `.env` basado en `.env.example` para especificar la base de la API.
+
+```
+VITE_API_BASE=https://mi-api.com
+```
+
 ### Compile and Minify for Production
 
 ```sh

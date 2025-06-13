@@ -1,15 +1,17 @@
 <template>
-  <button
+  <Button
+      :label="approved ? 'Approved' : 'Approve'"
+      :icon="approved ? 'ph ph-check-circle' : 'ph ph-check'"
+      :disabled="approved"
       class="approve-btn"
       :class="{ approved }"
       @click="$emit('approve')"
-  >
-    <i :class="['ph', approved ? 'ph-check-circle' : 'ph-check']"></i>
-    {{ approved ? 'Approved' : 'Approve' }}
-  </button>
+  />
 </template>
 
 <script setup>
+import Button from 'primevue/button'
+
 const props = defineProps({
   approved: {
     type: Boolean,
@@ -21,7 +23,7 @@ const emit = defineEmits(['approve'])
 </script>
 
 <style scoped>
-.approve-btn {
+:deep(.approve-btn.p-button) {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
@@ -29,24 +31,23 @@ const emit = defineEmits(['approve'])
   font-size: 0.85rem;
   font-weight: 600;
   border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
   background-color: #1e3a5f;
   color: #cbd5e1;
+  border: none;
+  transition: background-color 0.2s ease;
 }
 
-.approve-btn:hover {
+:deep(.approve-btn.p-button:hover:not(.p-disabled)) {
   background-color: #2c4d75;
 }
 
-.approve-btn.approved {
+:deep(.approve-btn.approved.p-button) {
   background-color: #22c55e33;
   color: #22c55e;
   cursor: default;
 }
 
-.approve-btn.approved:hover {
+:deep(.approve-btn.approved.p-button:hover) {
   background-color: #22c55e33;
 }
 </style>

@@ -1,135 +1,239 @@
 <template>
-  <div class="stepper">
-    <div
-        v-for="(step, index) in steps"
-        :key="index"
-        class="step"
-    >
-      <div
-          class="circle"
+  <nav class="progress-container" aria-label="Flujo de pasos">
+    <ol class="progress-steps">
+      <li
+          v-for="(step, index) in stepsToUse"
+          :key="index"
+          class="step"
           :class="{
           active: currentStep === index + 1,
-          completed: currentStep > index + 1
+          completed: step.status === 'completed',
+          failed: step.status === 'failed'
         }"
-          :title="step.label"
+          :aria-current="currentStep === index + 1 ? 'step' : null"
       >
-        <Transition name="fade">
-          <i
-              v-if="currentStep > index + 1"
-              class="ph ph-check-bold"
-              key="check"
-          />
-          <i
-              v-else
-              :class="step.icon"
-              key="icon"
-          />
-        </Transition>
-      </div>
+        <div class="step-wrapper">
+          <div class="circle" :title="step.label">
+            <Transition name="fade-scale" mode="out-in">
+              <i
+                  v-if="step.status === 'completed'"
+                  class="pi pi-check"
+                  key="check"
+              />
+              <i
+                  v-else-if="step.status === 'failed'"
+                  class="pi pi-times-circle"
+                  key="fail"
+              />
+              <i
+                  v-else
+                  :class="step.icon || 'pi pi-circle'"
+                  key="icon"
+              />
+            </Transition>
+          </div>
+          <span class="label">{{ step.label }}</span>
+        </div>
 
-      <span
-          class="label"
-          :class="{
-          'active-text': currentStep === index + 1,
-          'completed-text': currentStep > index + 1
-        }"
-      >
-        {{ step.label }}
-      </span>
-
-      <div v-if="index < steps.length - 1" class="line" />
-    </div>
-  </div>
+        <div v-if="index < stepsToUse.length - 1" class="line-wrapper">
+          <div class="line" :class="{ filled: step.status === 'completed' }" />
+        </div>
+      </li>
+    </ol>
+  </nav>
 </template>
 
 <script setup lang="ts">
-defineProps<{
+import { computed } from 'vue'
+
+const props = defineProps<{
   currentStep: number
+  steps?: {
+    label: string
+    icon?: string
+    status?: 'completed' | 'failed' | 'pending'
+  }[]
 }>()
 
-const steps = [
-  { label: 'Orden', icon: 'ph ph-clipboard-text' },
-  { label: 'Pago', icon: 'ph ph-bank' },
-  { label: 'Confirmar', icon: 'ph ph-check-circle' }
+const defaultSteps = [
+  { label: 'Orden', icon: 'pi pi-pencil', status: 'pending' },
+  { label: 'Pago', icon: 'pi pi-credit-card', status: 'pending' },
+  { label: 'Confirmar', icon: 'pi pi-check-circle', status: 'pending' }
 ]
+
+const stepsToUse = computed(() => props.steps ?? defaultSteps)
 </script>
 
 <style scoped>
-.stepper {
+.progress-container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 1.5rem;
-  margin-bottom: 1.5rem;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.progress-steps {
+  display: flex;
+  width: 100%;
+  max-width: 880px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
   position: relative;
 }
 
 .step {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  flex: 1;
   position: relative;
-  min-width: 80px;
+}
+
+.step-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .circle {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background-color: #cbd5e1;
-  color: white;
+  border: 2px solid #e5e7eb;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.1rem;
-  font-weight: bold;
-  transition: all 0.3s ease;
-  z-index: 1;
+  font-size: 1.25rem;
+  color: #6b7280;
+  background-color: transparent;
+  transition: all 0.3s ease, transform 0.2s ease;
 }
 
-.circle.active {
-  background-color: #0ea5e9;
+.step.active .circle {
+  border-color: #0ea5e9;
+  color: #0ea5e9;
+  background-color: #e0f2fe;
   transform: scale(1.1);
 }
 
-.circle.completed {
-  background-color: #10b981;
+.step.completed .circle {
+  border-color: #10b981;
+  color: #10b981;
+  background-color: #ecfdf5;
+  animation: bounceIn 0.35s ease-out;
+}
+
+.step.failed .circle {
+  border-color: #ef4444;
+  color: #ef4444;
+  background-color: #fef2f2;
+  animation: shake 0.3s ease-in-out;
 }
 
 .label {
   margin-top: 0.5rem;
-  font-size: 0.82rem;
-  color: #64748b;
-  text-align: center;
+  font-size: 0.85rem;
+  color: #6b7280;
+  font-weight: 500;
   transition: color 0.3s;
 }
 
-.label.active-text {
+.step.active .label {
   color: #0ea5e9;
   font-weight: 600;
 }
 
-.label.completed-text {
+.step.completed .label {
   color: #10b981;
 }
 
-.line {
+.step.failed .label {
+  color: #ef4444;
+}
+
+.line-wrapper {
   position: absolute;
-  top: 20px;
+  top: 21px;
   left: 50%;
-  right: -50%;
+  width: 100%;
   height: 2px;
-  background-color: #cbd5e1;
-  z-index: 0;
+  transform: translateX(50%);
+  z-index: -1;
 }
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.2s ease, transform 0.2s ease;
+.line {
+  width: 100%;
+  height: 2px;
+  background-color: #e5e7eb;
+  transition: background-color 0.3s ease;
 }
 
-.fade-enter-from, .fade-leave-to {
+.line.filled {
+  background-color: #10b981;
+}
+
+/* Animación de entrada elegante */
+.fade-scale-enter-active {
+  animation: fadeScaleIn 0.3s ease-out;
+}
+.fade-scale-leave-active {
   opacity: 0;
-  transform: scale(0.8);
+}
+@keyframes fadeScaleIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.75) rotate(-10deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Rebote suave para completado */
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.8);
+  }
+  60% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Agitación para fallo */
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+  75% {
+    transform: translateX(-2px);
+  }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .label {
+    display: none;
+  }
+
+  .circle {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
 }
 </style>

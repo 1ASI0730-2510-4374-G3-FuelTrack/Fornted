@@ -1,97 +1,154 @@
 <template>
-  <table class="orders-table">
-    <thead>
-    <tr>
-      <th>Creado</th>
-      <th>Usuario</th>
-      <th>Monto</th>
-      <th>Terminal</th>
-      <th>ID de Orden</th>
-      <th>Estado</th>
-    </tr>
-    </thead>
+  <div class="card orders-table-wrapper">
+    <DataTable
+        v-model:expandedRows="expandedRows"
+        :value="orders"
+        dataKey="id"
+        @rowExpand="onRowExpand"
+        @rowCollapse="onRowCollapse"
+        tableStyle="min-width: 60rem"
+    >
+      <!-- Cabecera con botones Expand/Collapse All -->
+      <template #header>
+        <div class="flex flex-wrap justify-end gap-2">
+          <Button text icon="pi pi-plus" label="Expand All" @click="expandAll" />
+          <Button text="Collapse All" icon="pi pi-minus" @click="collapseAll" />
+        </div>
+      </template>
 
-    <OrderRow
-        v-for="order in orders"
-        :key="order.id"
-        :order="order"
-    />
-  </table>
+      <Column expander style="width: 3rem" />
+
+      <Column field="created" :header="$t('orders.table.created')">
+        <template #body="slotProps">
+          {{ formatDate(slotProps.data.created) }}
+        </template>
+      </Column>
+
+      <Column field="user" :header="$t('orders.table.user')" />
+      <Column field="amount" :header="$t('orders.table.amount')" />
+      <Column field="terminal" :header="$t('orders.table.terminal')" />
+
+      <Column field="orderId" :header="$t('orders.table.order_id')">
+        <template #body="slotProps">
+          <span class="order-id">
+            {{ slotProps.data.orderId }}
+            <i
+                class="pi pi-copy"
+                title="Copiar"
+                @click.stop="copyToClipboard(slotProps.data.orderId)"
+            ></i>
+          </span>
+        </template>
+      </Column>
+
+      <Column field="status" :header="$t('orders.table.status')">
+        <template #body="slotProps">
+          <Tag
+              :value="slotProps.data.status"
+              :severity="getStatusSeverity(slotProps.data.status)"
+          />
+        </template>
+      </Column>
+
+      <template #expansion="slotProps">
+        <div class="p-4">
+          <OrderDetails :products="slotProps.data.products" />
+        </div>
+      </template>
+    </DataTable>
+    <Toast />
+  </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
+import Tag from 'primevue/tag'
+import Toast from 'primevue/toast'
+import Button from 'primevue/button'
+import { useToast } from 'primevue/usetoast'
+import OrderDetails from './OrderDetails.vue'
 import type { Order } from '@/domains/client/orders/models/Order'
-import OrderRow from './OrderRow.vue'
 
 const props = defineProps<{
   orders: Order[]
 }>()
+
+const expandedRows = ref<{ [key: string]: boolean }>({})
+const toast = useToast()
+
+function onRowExpand(event: any) {
+  expandedRows.value[event.data.id] = true
+  toast.add({ severity: 'info', summary: 'Order Expanded', detail: event.data.orderId, life: 2000 })
+}
+
+function onRowCollapse(event: any) {
+  delete expandedRows.value[event.data.id]
+  toast.add({ severity: 'warn', summary: 'Order Collapsed', detail: event.data.orderId, life: 2000 })
+}
+
+function expandAll() {
+  expandedRows.value = props.orders.reduce((acc, order) => {
+    acc[order.id] = true
+    return acc
+  }, {} as { [key: string]: boolean })
+}
+
+function collapseAll() {
+  expandedRows.value = {}
+}
+
+function formatDate(dateStr: string): string {
+  const date = new Date(dateStr)
+  return date.toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  }).toUpperCase()
+}
+
+function getStatusSeverity(status: string): string {
+  switch (status.toLowerCase()) {
+    case 'requested':
+      return 'success'
+    case 'approved':
+      return 'warning'
+    case 'released':
+      return 'info'
+    case 'closed':
+      return 'danger'
+    default:
+      return 'secondary'
+  }
+}
+
+function copyToClipboard(text: string) {
+  navigator.clipboard.writeText(text)
+}
 </script>
 
 <style scoped>
-.orders-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0 0.6rem;
-  font-size: 14px;
-  background-color: transparent;
+.orders-table-wrapper {
+  background-color: var(--surface-card);
+  border-radius: 12px;
+  padding: 1rem;
+  transition: background-color 0.3s ease;
 }
 
-.orders-table th {
-  background-color: #f8fafc;
-  font-weight: 600;
-  text-align: left;
-  padding: 1rem 1.2rem;
-  color: #334155;
-  font-size: 13.5px;
+.order-id {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  color: var(--primary-color);
 }
 
-.orders-table td {
-  background: white;
-  padding: 1rem 1.2rem;
-  color: #475569;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-  border-radius: 8px;
-  vertical-align: middle;
+.order-id i {
+  font-size: 1rem;
+  color: var(--primary-color);
+  transition: color 0.2s;
 }
 
-.orders-table tr {
-  transition: transform 0.2s ease;
+.order-id:hover i {
+  color: var(--primary-dark-color);
 }
-
-.orders-table tr:hover td {
-  transform: scale(1.01);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-}
-
-/* Estado de badge */
-.status {
-  padding: 0.4rem 0.9rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  display: inline-block;
-  text-transform: capitalize;
-}
-
-.status.requested {
-  background-color: #d1fae5;
-  color: #047857;
-}
-
-.status.approved {
-  background-color: #fef3c7;
-  color: #b45309;
-}
-
-.status.released {
-  background-color: #dbeafe;
-  color: #1d4ed8;
-}
-
-.status.closed {
-  background-color: #f3e8ff;
-  color: #9333ea;
-}
-
 </style>

@@ -8,22 +8,26 @@
         <th>Fuel Volume</th>
         <th>Total Spent</th>
         <th>Last Order</th>
+        <th>Actions</th>
       </tr>
       </thead>
       <tbody>
       <tr v-for="(client, index) in paginatedClients" :key="client.name">
         <td>
-          <PhosphorIcon
-              :name="getIcon(index)"
-              :size="20"
-              :class="['rank-icon', rankColor(index)]"
-          />
-
+          <PhosphorIcon :name="getIcon(index)" :size="20" :class="['rank-icon', rankColor(index)]" />
         </td>
         <td>{{ client.name }}</td>
         <td>{{ client.volume.toLocaleString() }} gal</td>
         <td>{{ formatCurrency(client.total) }}</td>
         <td>{{ formatDate(client.lastOrder) }}</td>
+        <td>
+          <Button
+              icon="pi pi-comments"
+              label="Contact"
+              @click="openChat(client)"
+              class="p-button-sm p-button-info"
+          />
+        </td>
       </tr>
       </tbody>
     </table>
@@ -33,13 +37,38 @@
       <span>Page {{ page }} / {{ totalPages }}</span>
       <button @click="nextPage" :disabled="page === totalPages">→</button>
     </div>
+
+    <!-- Chat Modal -->
+    <Dialog v-model:visible="showChat" modal header="Client Chat" :style="{ width: '30rem' }">
+      <div class="chat-box">
+        <div
+            v-for="(msg, index) in messages"
+            :key="index"
+            :class="['chat-message', msg.from]"
+        >
+          {{ msg.text }}
+        </div>
+      </div>
+
+      <div class="chat-input">
+        <InputText
+            v-model="newMessage"
+            placeholder="Type your message..."
+            class="w-full"
+            @keyup.enter="sendMessage"
+        />
+        <Button icon="pi pi-send" @click="sendMessage" />
+      </div>
+    </Dialog>
   </div>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { ref, computed } from 'vue'
 import PhosphorIcon from '@phosphor-icons/vue'
-
+import Dialog from 'primevue/dialog'
+import Button from 'primevue/button'
+import InputText from 'primevue/inputtext'
 
 import { formatCurrency, formatDate } from '../utils/clientUtils'
 
@@ -55,7 +84,6 @@ const perPage = 5
 
 const clientsSummary = computed(() => {
   const map = {}
-
   props.orders.forEach(order => {
     const name = order.user
     const total = parseFloat(order.amount.replace('S/', '').trim())
@@ -76,14 +104,10 @@ const clientsSummary = computed(() => {
           : map[name].lastOrder
     }
   })
-
   return Object.values(map).sort((a, b) => b.total - a.total)
 })
 
-const totalPages = computed(() =>
-    Math.ceil(clientsSummary.value.length / perPage)
-)
-
+const totalPages = computed(() => Math.ceil(clientsSummary.value.length / perPage))
 const paginatedClients = computed(() => {
   const start = (page.value - 1) * perPage
   return clientsSummary.value.slice(start, start + perPage)
@@ -101,10 +125,31 @@ function getIcon(index) {
   return ['trophy', 'star', 'crown'][index] || 'user'
 }
 
-
-
 function rankColor(index) {
   return ['gold', 'silver', 'bronze'][index] || 'default'
+}
+
+// Chat logic
+const showChat = ref(false)
+const currentClient = ref(null)
+const newMessage = ref('')
+const messages = ref([])
+
+function openChat(client) {
+  currentClient.value = client
+  // Aquí puedes cargar los mensajes reales si los tienes desde una API
+  messages.value = [
+    { from: 'client', text: 'Hola, necesito una nueva orden.' },
+    { from: 'provider', text: 'Claro, ¿qué cantidad requiere?' }
+  ]
+  showChat.value = true
+}
+
+function sendMessage() {
+  if (newMessage.value.trim()) {
+    messages.value.push({ from: 'provider', text: newMessage.value })
+    newMessage.value = ''
+  }
 }
 </script>
 
@@ -178,5 +223,42 @@ td {
 .pagination button:disabled {
   opacity: 0.3;
   cursor: not-allowed;
+}
+
+/* Chat modal styles */
+.chat-box {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  background: #0f172a;
+  border-radius: 8px;
+}
+
+.chat-message {
+  margin: 0.3rem 0;
+  padding: 0.5rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  max-width: 80%;
+}
+
+.chat-message.client {
+  background-color: #334155;
+  align-self: flex-start;
+  color: #fff;
+}
+
+.chat-message.provider {
+  background-color: #22c55e;
+  align-self: flex-end;
+  color: #000;
+  margin-left: auto;
+}
+
+.chat-input {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
 }
 </style>

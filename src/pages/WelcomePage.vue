@@ -1,19 +1,19 @@
 <!-- src/pages/WelcomePage.vue -->
 <template>
   <div class="welcome-container">
-    <h1 class="title">Bienvenido a FuelTrack</h1>
-    <p class="subtitle">Selecciona tu tipo de usuario para continuar:</p>
+    <h1 class="title">{{ $t('welcome.title') }}</h1>
+    <p class="subtitle">{{ $t('welcome.subtitle') }}</p>
 
     <div class="card-group">
       <div class="card" @click="goTo('/login-client')">
         <i class="ph ph-user"></i>
-        <h2>Cliente</h2>
-        <p>Empresas que solicitan combustible</p>
+        <h2>{{ $t('welcome.client_title') }}</h2>
+        <p>{{ $t('welcome.client_desc') }}</p>
       </div>
       <div class="card" @click="goTo('/login-supplier')">
         <i class="ph ph-briefcase"></i>
-        <h2>Proveedor</h2>
-        <p>Empresas que abastecen combustible</p>
+        <h2>{{ $t('welcome.supplier_title') }}</h2>
+        <p>{{ $t('welcome.supplier_desc') }}</p>
       </div>
     </div>
   </div>

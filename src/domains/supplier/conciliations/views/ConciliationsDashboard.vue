@@ -5,6 +5,16 @@
         :totalOrders="orders.length"
         :totalApproved="getStatusCount('Approved')"
         :totalRequested="getStatusCount('Requested')"
+        @open-load="showModal = true"
+        @clear="handleClearDocument"
+        @filter="handleFilter"
+        @range="handleDateRange"
+    />
+
+    <!-- Modal para subir documento -->
+    <LoadDocumentModal
+        v-model="showModal"
+        @submit="handleSubmitFiles"
     />
 
     <!-- Tabla de conciliaciones -->
@@ -19,30 +29,51 @@
 import { ref, onMounted } from 'vue'
 import ConciliationsHeader from '../components/ConciliationsHeader.vue'
 import ConciliationTable from '../components/ConciliationTable.vue'
+import LoadDocumentModal from '@/domains/supplier/conciliations/components/LoadDocumentModal.vue'
 import { getConciliations, approveOrder } from '../services/conciliationService.js'
+import { log, error as logError } from '@/services/logger'
 
+// Estado de órdenes y modal
 const orders = ref([])
+const showModal = ref(false)
 
+// Obtener órdenes al montar
 onMounted(async () => {
   orders.value = await getConciliations()
 })
 
+// Contador por estado
 function getStatusCount(status) {
   return orders.value.filter(order => order.status === status).length
 }
 
+// Acción de aprobar
 function handleApprove(order) {
   order.status = 'Approved'
   order.approved = true
   order.approvable = false
 
   approveOrder(order.id)
-      .then(() => {
-        console.log(`Orden ${order.id} aprobada correctamente.`)
-      })
-      .catch(error => {
-        console.error(`Error al aprobar la orden ${order.id}:`, error)
-      })
+      .then(() => log(`Orden ${order.id} aprobada correctamente.`))
+      .catch(err => logError(`Error al aprobar orden ${order.id}:`, err))
+}
+
+// Acciones del modal
+function handleSubmitFiles(files) {
+  log('Archivos cargados:', files)
+  showModal.value = false
+}
+
+function handleClearDocument() {
+  log('🗑 Documento limpiado')
+}
+
+function handleFilter() {
+  log('🎛 Filtro aplicado')
+}
+
+function handleDateRange() {
+  log('📅 Rango de fechas activado')
 }
 </script>
 

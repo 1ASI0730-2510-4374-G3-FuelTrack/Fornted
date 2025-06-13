@@ -5,42 +5,57 @@
       <h3 class="sidebar-title">FuelTrack</h3>
     </div>
 
-    <ul class="sidebar-menu">
-      <li><router-link to="/supplier/admin" class="sidebar-link" active-class="active"><i class="ph ph-user"></i> Admin</router-link></li>
-      <li><router-link to="/supplier/orders" class="sidebar-link" active-class="active"><i class="ph ph-clipboard-text"></i> Orders Management</router-link></li>
-      <li><router-link to="/supplier/conciliations" class="sidebar-link" active-class="active"><i class="ph ph-file-check"></i> Conciliations</router-link></li>
-      <li><router-link to="/supplier/dispatch" class="sidebar-link" active-class="active"><i class="ph ph-truck"></i> Dispatch</router-link></li>
-      <li><router-link to="/supplier/analytics" class="sidebar-link" active-class="active"><i class="ph ph-chart-bar"></i> Analytics</router-link></li>
-      <li><router-link to="/supplier/prices" class="sidebar-link" active-class="active"><i class="ph ph-currency-dollar"></i> Prices</router-link></li>
-      <li><router-link to="/supplier/clients" class="sidebar-link" active-class="active"><i class="ph ph-headphones"></i> Clients</router-link></li>
-    </ul>
+    <div class="sidebar-menu">
+      <router-link
+          v-for="item in menuItems"
+          :key="item.path"
+          :to="item.path"
+          class="sidebar-link"
+          active-class="active"
+      >
+        <i :class="item.icon"></i>
+        {{ $t(item.label) }}
+      </router-link>
+    </div>
   </aside>
 </template>
 
 <script>
 export default {
-  name: 'SidebarSupplier'
-}
+  name: 'SidebarSupplier',
+  data() {
+    return {
+      menuItems: [
+        { path: '/supplier/admin', label: 'sidebar.supplier.admin', icon: 'ph ph-user' },
+        { path: '/supplier/orders', label: 'sidebar.supplier.orders', icon: 'ph ph-clipboard-text' },
+        { path: '/supplier/conciliations', label: 'sidebar.supplier.conciliations', icon: 'ph ph-file-check' },
+        { path: '/supplier/dispatch', label: 'sidebar.supplier.dispatch', icon: 'ph ph-truck' },
+        { path: '/supplier/analytics', label: 'sidebar.supplier.analytics', icon: 'ph ph-chart-bar' },
+        { path: '/supplier/prices', label: 'sidebar.supplier.prices', icon: 'ph ph-currency-dollar' },
+        { path: '/supplier/clients', label: 'sidebar.supplier.clients', icon: 'ph ph-headphones' }
+      ]
+    };
+  }
+};
 </script>
 
 <style scoped>
 .sidebar-supplier {
   background-color: #0A2C47;
   color: #ffffff;
-  width: 240px;
+  width: 260px;
   min-height: 100vh;
   padding: 2rem 1rem;
   display: flex;
   flex-direction: column;
   box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1);
-  /* position: fixed;  <-- Eliminado */
 }
 
 .logo-block {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 }
 
 .sidebar-logo {
@@ -48,15 +63,15 @@ export default {
 }
 
 .sidebar-title {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: #ffffff;
 }
 
 .sidebar-menu {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .sidebar-link {
@@ -64,15 +79,19 @@ export default {
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
-  margin-bottom: 0.5rem;
   border-radius: 8px;
-  font-size: 0.92rem;
+  font-size: 0.95rem;
   color: #cbd5e1;
   text-decoration: none;
   transition: all 0.3s ease;
-  transform: translateX(0);
   position: relative;
-  overflow: hidden;
+  background-color: transparent;
+}
+
+.sidebar-link:hover {
+  background-color: #1e3a5f;
+  color: #ffffff;
+  transform: translateX(6px);
 }
 
 .sidebar-link::before {
@@ -85,12 +104,6 @@ export default {
   top: 0;
   opacity: 0;
   transition: opacity 0.3s;
-}
-
-.sidebar-link:hover {
-  background-color: #1E3A5F;
-  color: #ffffff;
-  transform: translateX(6px);
 }
 
 .sidebar-link:hover::before {

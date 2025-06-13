@@ -2,6 +2,7 @@
 
 import axios from 'axios'
 import API from '@/services/api'
+import { error as logError } from '@/services/logger'
 
 /**
  * Obtiene todas las órdenes registradas (con productos y estados).
@@ -13,7 +14,7 @@ export async function getWorkflows() {
         const response = await axios.get(`${API}/orders`)
         return response.data
     } catch (error) {
-        console.error('❌ Error al obtener workflows:', error)
+        logError('❌ Error al obtener workflows:', error)
         return []
     }
 }

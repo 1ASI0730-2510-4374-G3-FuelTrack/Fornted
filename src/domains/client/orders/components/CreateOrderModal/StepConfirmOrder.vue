@@ -15,12 +15,22 @@
       <h3><i class="ph ph-fuel"></i> Productos solicitados</h3>
       <ul>
         <li v-for="(detail, index) in data.details" :key="index">
-          <span><strong>{{ detail.product }}</strong> — {{ detail.quantity }} gal</span>
-          <span class="right">
-            S/ {{
-              formatPrice(detail.totalPrice)
-            }}
-          </span>
+          <div class="detail-line">
+            <span><strong>{{ detail.product }}</strong> — {{ detail.quantity }} gal</span>
+            <span class="right">S/ {{ formatPrice(detail.totalPrice) }}</span>
+          </div>
+          <div class="detail-status">
+            <Tag
+                :value="tagMessage(index)"
+                :severity="tagSeverity(index)"
+                class="mr-2"
+            />
+            <ProgressBar
+                :value="paymentPercent(index)"
+                showValue="false"
+                style="height: 6px; width: 100px;"
+            />
+          </div>
         </li>
       </ul>
     </div>
@@ -46,11 +56,33 @@
       <span class="label">Total a pagar:</span>
       <span class="amount">S/ {{ calcularTotal }}</span>
     </div>
+
+    <!-- Validación -->
+    <div class="validation-box" :class="isValid ? 'valid' : 'invalid'">
+      <i :class="isValid ? 'ph ph-check-circle' : 'ph ph-x-circle'" class="icon"></i>
+      <span>{{ isValid ? 'Todos los pagos están completos.' : 'Faltan pagos por completar.' }}</span>
+    </div>
   </div>
+  <!-- Botón de confirmación -->
+  <div class="button-box">
+    <Button
+        label="Confirmar Orden"
+        icon="pi pi-check"
+        severity="success"
+        class="mt-4"
+        @click="emit('valid')"  :disabled="!isValid"
+    />
+  </div>
+
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
+import Tag from 'primevue/tag'
+import ProgressBar from 'primevue/progressbar'
+import Button from 'primevue/button'
+
+const emit = defineEmits(['update:isValid'])
 
 const props = defineProps({
   modelValue: {
@@ -61,9 +93,6 @@ const props = defineProps({
 
 const data = computed(() => props.modelValue)
 
-/**
- * Limpia y convierte un string de precio tipo "S/ 123.45" a 123.45
- */
 function cleanPrice(value) {
   if (!value) return 0
   const num = value.replace('S/', '').replace(',', '').trim()
@@ -78,6 +107,49 @@ function formatPrice(value) {
 const calcularTotal = computed(() =>
     data.value.details.reduce((acc, d) => acc + cleanPrice(d.totalPrice), 0).toFixed(2)
 )
+
+function totalPagado(index) {
+  const pagos = data.value.payments[index] || []
+  return pagos.reduce((acc, p) => acc + (parseFloat(p.amount) || 0), 0)
+}
+
+function paymentPercent(index) {
+  const total = cleanPrice(data.value.details[index]?.totalPrice)
+  const paid = totalPagado(index)
+  return Math.min((paid / total) * 100, 100)
+}
+
+function tagSeverity(index) {
+  const total = cleanPrice(data.value.details[index]?.totalPrice)
+  const paid = totalPagado(index)
+  const pct = paid / total
+
+  if (pct >= 1) return 'success'
+  if (pct >= 0.75) return 'info'
+  if (pct >= 0.4) return 'warning'
+  return 'danger'
+}
+
+function tagMessage(index) {
+  const total = cleanPrice(data.value.details[index]?.totalPrice)
+  const paid = totalPagado(index)
+
+  if (paid >= total) return 'Pagado completo'
+  if (paid >= total * 0.75) return 'Casi completo'
+  if (paid >= total * 0.4) return 'Falta cubrir más de la mitad'
+  return 'Falta la mayor parte'
+}
+
+const isValid = computed(() => {
+  return data.value.details.every((d, i) => {
+    const total = cleanPrice(d.totalPrice)
+    return totalPagado(i) >= total
+  })
+})
+
+watch(isValid, (val) => {
+  emit('update:isValid', val)
+}, { immediate: true })
 </script>
 
 <style scoped>
@@ -125,8 +197,6 @@ ul {
 }
 
 ul li {
-  display: flex;
-  justify-content: space-between;
   padding: 0.4rem 0;
   font-size: 0.85rem;
   border-bottom: 1px dashed #e2e8f0;
@@ -135,6 +205,18 @@ ul li {
 
 ul li:last-child {
   border-bottom: none;
+}
+
+.detail-line {
+  display: flex;
+  justify-content: space-between;
+}
+
+.detail-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
 }
 
 .right {
@@ -173,5 +255,32 @@ ul li:last-child {
 .total-box .amount {
   font-size: 1.1rem;
   color: #0f172a;
+}
+
+.validation-box {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.validation-box.valid {
+  background-color: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #bbf7d0;
+}
+
+.validation-box.invalid {
+  background-color: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.validation-box .icon {
+  font-size: 1.2rem;
 }
 </style>

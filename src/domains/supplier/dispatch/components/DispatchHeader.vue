@@ -1,48 +1,63 @@
 <template>
   <div class="dispatch-header">
-    <!-- Izquierda -->
+    <!-- Sección izquierda -->
     <div class="left">
-      <h1 class="title">Dispatch</h1>
-      <p class="subtitle">Check your order’s payments and approve them!</p>
+      <h2 class="text-2xl font-bold text-white mb-1">Dispatch</h2>
+      <p class="text-sm text-slate-300 mb-2">
+        Check your order’s payments and approve them!
+      </p>
 
-      <button class="release-btn" :disabled="!hasSelected" @click="$emit('release')">
-        Release Orders
-      </button>
+      <Button
+          label="Release Orders"
+          icon="pi pi-check"
+          severity="warning"
+          :disabled="!hasSelected"
+          @click="$emit('release')"
+          class="w-max"
+      />
     </div>
 
-    <!-- Derecha -->
+    <!-- Sección derecha -->
     <div class="right">
-      <div class="stats">
-        <div class="stat">
-          <span class="value green">651.9K</span>
-          <span class="label">Total Orders</span>
+      <div class="stats flex gap-4 items-center mb-2">
+        <div class="flex flex-col items-center">
+          <span class="text-green-400 font-bold text-lg">651.9K</span>
+          <span class="text-sm text-slate-400">Total Orders</span>
         </div>
-        <div class="separator">|</div>
-        <div class="stat">
-          <span class="value green">607.78K</span>
-          <span class="label">Approved</span>
+        <span class="text-slate-500 text-xl">|</span>
+        <div class="flex flex-col items-center">
+          <span class="text-green-400 font-bold text-lg">607.78K</span>
+          <span class="text-sm text-slate-400">Approved</span>
         </div>
-        <div class="separator">|</div>
-        <div class="stat">
-          <span class="value green">44.12K</span>
-          <span class="label">Requested</span>
+        <span class="text-slate-500 text-xl">|</span>
+        <div class="flex flex-col items-center">
+          <span class="text-green-400 font-bold text-lg">44.12K</span>
+          <span class="text-sm text-slate-400">Requested</span>
         </div>
       </div>
 
-      <div class="filters">
-        <button class="filter-btn">
-          <PhSlidersHorizontal :size="18" /> Filters
-        </button>
-        <button class="filter-btn">
-          <PhCalendarBlank :size="18" /> Date Range
-        </button>
+      <div class="flex gap-2">
+        <Button
+            icon="pi pi-sliders-h"
+            label="Filters"
+            outlined
+            severity="secondary"
+            class="dark-button"
+        />
+        <Button
+            icon="pi pi-calendar"
+            label="Date Range"
+            outlined
+            severity="secondary"
+            class="dark-button"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { PhCalendarBlank, PhSlidersHorizontal } from '@phosphor-icons/vue'
+import  Button  from 'primevue/button'
 
 defineProps({
   hasSelected: Boolean
@@ -54,102 +69,25 @@ defineEmits(['release'])
 .dispatch-header {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2rem;
   align-items: flex-start;
   padding: 1.5rem 0;
-  gap: 2rem;
-  flex-wrap: wrap;
 }
 
 .left {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
-
-.title {
-  color: #ffffff;
-  font-size: 1.4rem;
-  font-weight: bold;
-}
-
-.subtitle {
-  color: #cbd5e1;
-  font-size: 0.9rem;
-  margin-bottom: 0.2rem;
-}
-
-.release-btn {
-  background-color: #f97316;
-  color: white;
-  border: none;
-  padding: 0.4rem 1rem;
-  font-weight: 600;
-  font-size: 0.85rem;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.2s ease;
-  width: fit-content;
-}
-
-.release-btn:disabled {
-  background-color: #f9731670;
-  cursor: not-allowed;
 }
 
 .right {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 0.5rem;
 }
 
-.stats {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.value {
-  font-weight: bold;
-  font-size: 1rem;
-}
-
-.value.green {
-  color: #22c55e;
-}
-
-.label {
-  font-size: 0.75rem;
-  color: #94a3b8;
-}
-
-.separator {
-  color: #334155;
-  font-size: 1.2rem;
-}
-
-.filters {
-  display: flex;
-  gap: 0.6rem;
-}
-
-.filter-btn {
-  background-color: #1e2e4a;
-  color: #cbd5e1;
-  border: 1px solid #334155;
-  padding: 0.4rem 0.8rem;
-  font-size: 0.85rem;
-  border-radius: 6px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
+.dark-button {
+  background-color: #1e2e4a !important;
+  border-color: #334155 !important;
+  color: #cbd5e1 !important;
 }
 </style>

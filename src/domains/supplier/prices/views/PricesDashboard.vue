@@ -14,8 +14,7 @@ import { ref, onMounted } from 'vue'
 import PriceList from '../components/PriceList.vue'
 import { getProviderFuels, updateFuelPrice } from '../services/priceService'
 
-// Datos del proveedor simulado (reemplazar por login dinámico)
-const providerRuc = '10498765432'
+const providerRuc = '10498765432' // Simulación temporal
 
 const fuels = ref([])
 
@@ -27,7 +26,9 @@ async function handlePriceUpdate({ id, newPrice }) {
   const updated = await updateFuelPrice(id, newPrice)
   if (updated) {
     const item = fuels.value.find(f => f.id === id)
-    if (item) item.pricePerGal = `S/ ${parseFloat(newPrice).toFixed(2)}`
+    if (item) {
+      item.pricePerGal = parseFloat(newPrice)
+    }
   }
 }
 </script>

@@ -14,26 +14,28 @@
       </thead>
       <tbody>
       <template v-for="order in orders" :key="order.id">
-        <!-- Fila principal -->
+        <!-- Row principal -->
         <tr class="table-row">
           <td>{{ order.orderId }}</td>
           <td>{{ order.user }}</td>
           <td>{{ formatDate(order.created) }}</td>
           <td>{{ order.terminal }}</td>
           <td>
-              <span :class="['badge', order.status.toLowerCase()]">
-                {{ order.status }}
-              </span>
+            <Tag :value="order.status" :severity="getSeverity(order.status)" class="status-tag" />
           </td>
           <td>{{ formatCurrency(order.amount) }}</td>
           <td>
-            <button class="expand-btn" @click="toggleExpanded(order.id)">
-              <i :class="['ph', expandedRows.includes(order.id) ? 'ph-caret-up' : 'ph-caret-down']"></i>
-            </button>
+            <Button
+                @click="toggleExpanded(order.id)"
+                icon="pi pi-chevron-down"
+                text
+                rounded
+                :class="['expand-btn', expandedRows.includes(order.id) && 'rotated']"
+            />
           </td>
         </tr>
 
-        <!-- Fila expandida -->
+        <!-- Row expandida -->
         <tr v-if="expandedRows.includes(order.id)" class="expanded-row">
           <td colspan="7">
             <table class="products-table">
@@ -66,12 +68,11 @@
 
 <script setup>
 import { ref, defineProps } from 'vue'
+import Button from 'primevue/button'
+import Tag from 'primevue/tag'
 
 const props = defineProps({
-  orders: {
-    type: Array,
-    required: true
-  }
+  orders: Array
 })
 
 const expandedRows = ref([])
@@ -94,8 +95,7 @@ function formatCurrency(value) {
 
   return new Intl.NumberFormat('es-PE', {
     style: 'currency',
-    currency: 'PEN',
-    minimumFractionDigits: 2
+    currency: 'PEN'
   }).format(amount).replace('PEN', 'S/')
 }
 
@@ -106,6 +106,17 @@ function formatDate(dateStr) {
     month: 'short',
     year: 'numeric'
   })
+}
+
+function getSeverity(status) {
+  switch (status) {
+    case 'Requested': return 'info'
+    case 'Approved': return 'success'
+    case 'Released': return 'warning'
+    case 'Dispatched': return 'help'
+    case 'Closed': return 'secondary'
+    default: return null
+  }
 }
 </script>
 
@@ -128,8 +139,7 @@ thead {
   background-color: #1e2e4a;
 }
 
-th,
-td {
+th, td {
   padding: 1rem;
   text-align: left;
   font-size: 0.85rem;
@@ -147,46 +157,22 @@ th {
   transition: background-color 0.2s ease-in-out;
 }
 
-.badge {
-  padding: 0.25rem 0.6rem;
-  border-radius: 8px;
-  font-size: 0.75rem;
-  font-weight: 500;
+.status-tag {
   text-transform: capitalize;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 10px;
 }
 
-.badge.requested {
-  background-color: #00ffff22;
-  color: #00ffff;
-}
-
-.badge.approved {
-  background-color: #50fa7b22;
-  color: #50fa7b;
-}
-
-.badge.released {
-  background-color: #ffdd5722;
-  color: #ffdd57;
-}
-
-.badge.dispatched {
-  background-color: #1f9bff22;
-  color: #1f9bff;
-}
-
-.badge.closed {
-  background-color: #64748b33;
-  color: #94a3b8;
-}
-
+/* Botón de expandir */
 .expand-btn {
-  background: none;
-  border: none;
-  color: #94a3b8;
-  cursor: pointer;
   font-size: 1rem;
+  color: #cbd5e1;
   transition: transform 0.2s ease;
+}
+.expand-btn.rotated :deep(i) {
+  transform: rotate(180deg);
 }
 
 .products-table {

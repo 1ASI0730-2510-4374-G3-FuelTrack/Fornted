@@ -1,45 +1,38 @@
 <template>
   <div class="product-row">
-    <table>
-      <thead>
-      <tr>
-        <th>Product</th>
-        <th>Quantity</th>
-        <th>Unit</th>
-        <th>Price</th>
-        <th>Total</th>
-        <th></th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td>{{ product.product }}</td>
-        <td>{{ product.quantity }}</td>
-        <td>{{ product.unit }}</td>
-        <td>{{ formatCurrency(product.price) }}</td>
-        <td>{{ product.total }}</td>
-        <td>
-          <button class="expand-btn" @click="expanded = !expanded">
-            <i :class="['ph', expanded ? 'ph-caret-up' : 'ph-caret-down']"></i>
-          </button>
-        </td>
-      </tr>
-
-      <tr v-if="expanded">
-        <td colspan="6">
-          <PaymentDetails
-              :product="product"
-              @update="onPaymentsUpdate"
+    <DataTable :value="[product]" class="p-datatable-sm">
+      <Column field="product" header="Product" />
+      <Column field="quantity" header="Quantity" />
+      <Column field="unit" header="Unit" />
+      <Column header="Price" :body="row => formatCurrency(row.price)" />
+      <Column field="total" header="Total" />
+      <Column style="width: 60px">
+        <template #body>
+          <Button
+              :icon="expanded ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"
+              text
+              rounded
+              class="expand-btn"
+              @click="expanded = !expanded"
           />
-        </td>
-      </tr>
-      </tbody>
-    </table>
+        </template>
+      </Column>
+    </DataTable>
+
+    <div v-if="expanded" class="expanded">
+      <PaymentDetails
+          :product="product"
+          @update="onPaymentsUpdate"
+      />
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, watch } from 'vue'
+import Button from 'primevue/button'
+import DataTable from 'primevue/datatable'
+import Column from 'primevue/column'
 import PaymentDetails from './PaymentDetails.vue'
 
 const props = defineProps({
@@ -50,13 +43,15 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['validated'])
-
 const expanded = ref(false)
 
-// Verificar pagos al montar o actualizar producto
-watch(() => props.product, () => {
-  checkAllValidated()
-}, { immediate: true })
+watch(
+    () => props.product,
+    () => {
+      checkAllValidated()
+    },
+    { immediate: true }
+)
 
 function onPaymentsUpdate() {
   checkAllValidated()
@@ -78,38 +73,46 @@ function formatCurrency(value) {
 }
 </script>
 
-
 <style scoped>
 .product-row {
-  margin-top: 0.5rem;
-  border-radius: 10px;
   background-color: #1b2d47;
+  border-radius: 10px;
+  margin-top: 1rem;
+  padding-bottom: 1rem;
+  color: #ffffff;
   overflow: hidden;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  color: #ffffff;
+/* Tabla PrimeVue */
+:deep(.p-datatable) {
+  background-color: #1b2d47;
+  border-radius: 0;
 }
 
-thead {
+:deep(.p-datatable thead th) {
   background-color: #22324c;
+  color: #cbd5e1;
+  font-size: 0.85rem;
 }
 
-th,
-td {
-  padding: 0.7rem;
-  font-size: 0.82rem;
+:deep(.p-datatable tbody td) {
+  background-color: #1b2d47;
   border-bottom: 1px solid #32445f;
-  text-align: left;
+  font-size: 0.82rem;
 }
 
-.expand-btn {
+/* Botón expandible */
+:deep(.expand-btn.p-button) {
+  font-size: 1rem;
+  color: #94a3b8;
   background: none;
   border: none;
-  color: #94a3b8;
-  font-size: 1rem;
-  cursor: pointer;
+  padding: 0.3rem;
+}
+
+/* Contenedor del detalle */
+.expanded {
+  padding: 0.5rem 1rem 1rem;
+  background-color: #142538;
 }
 </style>

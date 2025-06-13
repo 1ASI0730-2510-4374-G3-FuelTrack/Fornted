@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-container">
+  <div class="dashboard-supplier dark-theme">
     <SidebarSupplier />
     <main class="main-content">
       <router-view />
@@ -19,23 +19,25 @@ export default {
 </script>
 
 <style scoped>
-.dashboard-container {
+.dashboard-supplier {
   display: flex;
   min-height: 100vh;
-  background-color: #0A2C47;
+  background-color: #0f172a; /* Dark navy */
+  color: #f1f5f9;
 }
 
-/* Asegúrate que Sidebar tenga ancho fijo */
+/* Sidebar fijo */
 .sidebar-supplier {
   width: 240px;
   flex-shrink: 0;
 }
 
-/* Contenido principal ocupa el resto */
+/* Contenido principal */
 .main-content {
   flex: 1;
   padding: 2rem;
   overflow-y: auto;
-  background-color: #0C1F3A;
+  background-color: #1e293b; /* Azul oscuro más suave */
+  color: #f8fafc;
 }
 </style>

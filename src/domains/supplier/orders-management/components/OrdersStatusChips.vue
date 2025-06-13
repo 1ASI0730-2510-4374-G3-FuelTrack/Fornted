@@ -1,21 +1,27 @@
 <template>
   <div class="status-chips">
-    <button
+    <Button
         v-for="status in statuses"
         :key="status.value"
+        :label="status.label"
+        :icon="getIcon(status.value)"
         :class="['chip', { active: selected === status.value }]"
         :style="getStyle(status.value, selected === status.value)"
         @click="$emit('update:selected', status.value)"
+        text
+        rounded
     >
-      <i :class="['ph', getIcon(status.value)]"></i>
-      <span class="label">{{ status.label }}</span>
-      <span class="count">{{ formatCount(status.count) }}</span>
-    </button>
+      <template #default>
+        <i :class="['ph', getIcon(status.value)]" />
+        <span class="label">{{ status.label }}</span>
+        <span class="count">{{ formatCount(status.count) }}</span>
+      </template>
+    </Button>
   </div>
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue'
+import Button from 'primevue/button'
 
 const props = defineProps({
   statuses: Array,
@@ -49,8 +55,9 @@ function getStyle(status, isActive) {
   const color = colorMap[status] || '#cbd5e1'
   return {
     border: `1px solid ${isActive ? 'transparent' : '#ffffff33'}`,
-    backgroundColor: isActive ? `${color}33` : 'transparent',
-    color: isActive ? color : '#ffffff'
+    backgroundColor: isActive ? `${color}22` : 'transparent',
+    color: isActive ? color : '#ffffff',
+    fontWeight: 500
   }
 }
 
@@ -67,28 +74,28 @@ function getIcon(status) {
   margin-bottom: 1.5rem;
 }
 
-.chip {
+:deep(.chip) {
   display: flex;
   align-items: center;
   gap: 0.6rem;
   padding: 0.45rem 1rem;
-  border-radius: 16px;
+  border-radius: 999px;
   font-size: 0.86rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.25s ease-in-out;
+  border: 1px solid #ffffff33;
   min-width: 140px;
+  transition: all 0.25s ease-in-out;
+  justify-content: space-between;
 }
 
-.chip i {
+:deep(.chip i) {
   font-size: 1rem;
 }
 
-.label {
+:deep(.label) {
   text-transform: capitalize;
 }
 
-.count {
+:deep(.count) {
   background-color: #1e2e4a;
   padding: 2px 10px;
   border-radius: 999px;

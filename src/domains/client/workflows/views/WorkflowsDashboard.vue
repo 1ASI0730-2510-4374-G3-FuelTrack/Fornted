@@ -1,91 +1,42 @@
 <template>
-  <div class="workflows-dashboard">
-    <header class="section-title">
-      <i class="ph ph-flow-arrow"></i>
-      Flujos de Órdenes
-    </header>
+  <div class="workflow-dashboard">
+    <h2 class="text-xl font-semibold text-primary mb-2">
+      <i class="pi pi-sitemap mr-2" /> Flujos de Órdenes
+    </h2>
+    <p class="text-sm text-color-secondary mb-4">
+      Seguimiento visual de tus órdenes paso a paso.
+    </p>
 
-    <!-- Tarjetas de workflow -->
-    <section class="workflow-grid">
+    <div v-if="orders.length" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
       <OrderWorkflowCard
-          v-for="order in workflows"
+          v-for="order in orders"
           :key="order.id"
           :order="order"
       />
-    </section>
+    </div>
 
-    <!-- Mapa de envíos -->
-    <section class="panel-section">
-      <h3 class="panel-title">
-        <i class="ph ph-map-pin-line"></i> Envíos en Ruta
-      </h3>
-      <WorkflowMap />
-    </section>
-
-    <!-- Línea de tiempo -->
-    <section class="panel-section">
-      <h3 class="panel-title">
-        <i class="ph ph-clock-countdown"></i> Línea de Tiempo Global
-      </h3>
-      <WorkflowTimeline :orders="workflows" />
-    </section>
+    <Message v-else severity="info">
+      <i class="pi pi-info-circle mr-2" /> No hay órdenes disponibles para visualizar.
+    </Message>
   </div>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import { getWorkflows } from '../services/workflowService.js'
-
 import OrderWorkflowCard from '../components/OrderWorkflowCard.vue'
-import WorkflowMap from '../components/WorkflowMap.vue'
-import WorkflowTimeline from '../components/WorkflowTimeline.vue'
+import Message from 'primevue/message'
+import { getWorkflows } from '../services/workflowService'
 
-const workflows = ref([])
+const orders = ref([])
 
 onMounted(async () => {
-  workflows.value = await getWorkflows()
+  orders.value = await getWorkflows()
 })
 </script>
 
 <style scoped>
-.workflows-dashboard {
+.workflow-dashboard {
   padding: 2rem;
-  background-color: #f9fafb;
-  min-height: 100vh;
-}
-
-.section-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
-  color: #1e293b;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.workflow-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.panel-section {
-  background-color: #ffffff;
-  padding: 1.5rem;
-  border-radius: 12px;
-  margin-bottom: 2rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
-}
-
-.panel-title {
-  font-size: 1.15rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  color: #0f172a;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  background: var(--surface-ground);
 }
 </style>
